@@ -3,6 +3,7 @@ package smartlift.ibesk.ru.smartliftclient.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -53,7 +54,9 @@ public class TimerTextView extends TextView {
     }
 
     private void checkDeadline(long timeLeft) {
-        if (mDeadline != -1 && timeLeft < mDeadline) {
+        if (mDeadline != -1 && getCurrentTextColor() != Color.RED
+                &&timeLeft < mDeadline) {
+            Log.d("qq", "setColor: ");
             setTextColor(Color.RED);
         }
     }
