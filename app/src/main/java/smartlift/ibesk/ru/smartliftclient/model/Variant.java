@@ -5,6 +5,14 @@ package smartlift.ibesk.ru.smartliftclient.model;
  */
 
 public class Variant {
+    public int getNum() {
+        return num;
+    }
+
+    public String getText() {
+        return text;
+    }
+
     private int num;
     private String text;
 }

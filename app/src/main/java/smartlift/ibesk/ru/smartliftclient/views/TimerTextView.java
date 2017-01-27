@@ -17,7 +17,7 @@ import smartlift.ibesk.ru.smartliftclient.R;
  */
 
 public class TimerTextView extends TextView {
-    private DateFormat mFormatter = new SimpleDateFormat("HH:mm:ss");
+    private DateFormat mFormatter = new SimpleDateFormat("mm:ss");
     private Date mDate = new Date();
     private long mDeadline = -1;
     private int mDefaultColor;

@@ -10,8 +10,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="smartlift.ibesk.ru.smartliftclient.MainActivity">
-
+    
+    <!--testing panel-->
     <LinearLayout
+        android:id="@+id/test_panel"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
@@ -46,7 +48,9 @@
             android:text="Reset"/>
     </LinearLayout>
     
+    <!--Timer panel-->
     <LinearLayout
+        android:id="@+id/timer_panel"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -63,4 +67,14 @@
             android:layout_height="50dp"
             android:textSize="30sp"/>
     </LinearLayout>
+
+    <!--Fragment container-->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_below="@id/test_panel"
+        android:layout_above="@id/timer_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 </RelativeLayout>

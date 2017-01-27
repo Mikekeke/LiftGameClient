@@ -1,13 +1,17 @@
 package smartlift.ibesk.ru.smartliftclient;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
+import smartlift.ibesk.ru.smartliftclient.utils.JsonHolder;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
 import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        QuestionFragment.AnswerListener {
 
     private TimerTextView mTimerTv;
     private final long TEST_TIME = 10 * 1000;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnLoadQuestion:
+                insertQuestionFragment();
                 break;
             case R.id.btnStartTimer:
                 if (mLiftTimer != null) {
@@ -48,6 +53,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mLiftTimer.reset();
                 }
             default: // empty
+        }
+    }
+
+    private void insertQuestionFragment() {
+        Fragment fragment = QuestionFragment.newInstance(JsonHolder.JSON);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment).commit();
+    }
+
+    @Override
+    public void onAnswer() {
+        if (mLiftTimer != null) {
+            mLiftTimer.pause();
         }
     }
 }

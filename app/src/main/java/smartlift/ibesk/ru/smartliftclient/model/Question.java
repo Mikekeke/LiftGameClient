@@ -1,10 +1,12 @@
 package smartlift.ibesk.ru.smartliftclient.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Mikekeke on 27-Jan-17.
  */
 
-public class Question {
+public class Question implements Serializable{
     private int num;
     private String name;
     private String question;
