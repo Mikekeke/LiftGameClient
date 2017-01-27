@@ -54,8 +54,8 @@ public class TimerTextView extends TextView {
     }
 
     private void checkDeadline(long timeLeft) {
-        if (mDeadline != -1 && getCurrentTextColor() != Color.RED
-                &&timeLeft < mDeadline) {
+        if (mDeadline != -1 && getCurrentTextColor() != Color.RED &&
+                timeLeft < mDeadline) {
             Log.d("qq", "setColor: ");
             setTextColor(Color.RED);
         }
