@@ -11,8 +11,56 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="smartlift.ibesk.ru.smartliftclient.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test bar"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btnLoadQuestion"
+            android:text="Load q"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btnStartTimer"
+            android:text="Start timer"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btnPauseTimer"
+            android:text="Pause timer"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btnResetTimer"
+            android:text="Reset"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Timer:"
+            android:textSize="30sp"
+            android:layout_marginRight="100dp"/>
+        <smartlift.ibesk.ru.smartliftclient.views.TimerTextView
+            android:id="@+id/timerTv"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:textSize="30sp"/>
+    </LinearLayout>
 </RelativeLayout>

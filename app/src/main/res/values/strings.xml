@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SmartLiftClient</string>
+    <string name="time_is_up">Time is UP!</string>
 </resources>
