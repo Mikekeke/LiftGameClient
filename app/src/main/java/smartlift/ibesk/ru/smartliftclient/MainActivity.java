@@ -32,11 +32,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnResetTimer).setOnClickListener(this);
     }
 
+    private void startQuestion() {
+        insertQuestionFragment();
+        if (mLiftTimer != null) {
+            mLiftTimer.start();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnLoadQuestion:
-                insertQuestionFragment();
+                startQuestion();
                 break;
             case R.id.btnStartTimer:
                 if (mLiftTimer != null) {
