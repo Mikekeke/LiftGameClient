@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="15dp"
-        android:text="@string/hello_blank_fragment"
         android:textSize="30sp"
+        android:textStyle="bold"
         tools:text="Question name" />
 
     <TextView
@@ -24,11 +24,23 @@
         android:textSize="30sp"
         tools:text="Question text text text text text" />
 
+    <TextView
+        android:id="@+id/q_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/q_text"
+        android:layout_marginBottom="30dp"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        tools:text="Question text text text text text"
+        android:visibility="gone"/>
+
     <!--buttons-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/q_text"
+        android:layout_below="@id/q_answer"
         android:orientation="vertical">
 
         <LinearLayout

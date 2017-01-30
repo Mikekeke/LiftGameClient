@@ -10,10 +10,17 @@ public class LiftTimer {
     private TimerTextView mTv;
     private CountDownTimer mTimer;
 
-    public LiftTimer(long timeLeft, TimerTextView tv) {
+    public interface TimeFinishListener {
+        void onTimeFinish();
+    }
+
+    private TimeFinishListener mFinishListener;
+
+    public LiftTimer(long timeLeft, TimerTextView tv, TimeFinishListener listener) {
         mInitialTime = timeLeft;
         mTimeLeft = timeLeft;
         mTv = tv;
+        mFinishListener = listener;
     }
 
     public void start() {
@@ -29,6 +36,9 @@ public class LiftTimer {
             public void onFinish() {
                 mTv.finish();
                 mTimeLeft = 0;
+                if (mFinishListener != null) {
+                    mFinishListener.onTimeFinish();
+                }
             }
         }.start();
     }

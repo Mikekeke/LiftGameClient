@@ -1,6 +1,7 @@
 package smartlift.ibesk.ru.smartliftclient.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Created by Mikekeke on 27-Jan-17.
@@ -9,11 +10,11 @@ import java.io.Serializable;
 public class Question implements Serializable{
     private int num;
     private String name;
-    private String question;
-    private Variant[] variants;
-    private short correctVar;
+    private String question, answer;
+    private Map<Integer, Variant> variants;
+    private int correctVar;
 
-    public short getCorrectVar() {
+    public int getCorrectVar() {
         return correctVar;
     }
 
@@ -41,10 +42,14 @@ public class Question implements Serializable{
         return status;
     }
 
-    public Variant[] getVariants() {
+    public Map<Integer, Variant> getVariants() {
         return variants;
     }
 
     private QStatus status;
     private String img1, img2;
+
+    public String getAnswer() {
+        return answer;
+    }
 }
