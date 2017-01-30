@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
+import smartlift.ibesk.ru.smartliftclient.services.MyIntentService;
 import smartlift.ibesk.ru.smartliftclient.utils.JsonHolder;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
 import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnResetTimer).setOnClickListener(this);
         findViewById(R.id.btnCheck).setOnClickListener(this);
         findViewById(R.id.btnAnswer).setOnClickListener(this);
+        findViewById(R.id.btnServer).setOnClickListener(this);
         container = (FrameLayout) findViewById(R.id.fragment_container);
     }
 
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (mQFragment != null) {
                     mQFragment.showAnswer();
                 }
+
+            case R.id.btnServer:
+                MyIntentService.start(this);
+
             default: // empty
         }
     }
