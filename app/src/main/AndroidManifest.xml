@@ -18,7 +18,7 @@
         </activity>
 
         <service
-            android:name=".services.MyIntentService"
+            android:name=".services.ApiService"
             android:exported="false">
         </service>
     </application>

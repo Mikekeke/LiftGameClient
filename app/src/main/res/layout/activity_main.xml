@@ -1,97 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="smartlift.ibesk.ru.smartliftclient.MainActivity">
-    
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="smartlift.ibesk.ru.smartliftclient.MainActivity">
+
     <!--testing panel-->
     <LinearLayout
-        android:id="@+id/test_panel"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true">
+            android:id="@+id/test_panel"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Test bar"
-            android:layout_marginRight="10dp"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnLoadQuestion"
-            android:text="Load q"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test bar"
+                android:layout_marginRight="10dp"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnStartTimer"
-            android:text="Start timer"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnLoadQuestion"
+                android:text="Load q"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnPauseTimer"
-            android:text="Pause timer"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnResetTimer"
-            android:text="Reset"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnStartTimer"
+                android:text="Start timer"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnCheck"
-            android:text="Check"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnAnswer"
-            android:text="Answer"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnPauseTimer"
+                android:text="Pause timer"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnServer"
-            android:text="Server"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnResetTimer"
+                android:text="Reset"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnCheck"
+                android:text="Check"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnAnswer"
+                android:text="Answer"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnServer"
+                android:text="Server"/>
     </LinearLayout>
-    
+
     <!--Timer panel-->
     <LinearLayout
-        android:id="@+id/timer_panel"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Timer:"
-            android:textSize="30sp"
-            android:layout_marginRight="100dp"/>
-        <smartlift.ibesk.ru.smartliftclient.views.TimerTextView
-            android:id="@+id/timerTv"
-            android:layout_width="200dp"
+            android:id="@+id/timer_panel"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="30sp"/>
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Timer:"
+                android:textSize="30sp"
+                android:layout_marginRight="100dp"/>
+
+        <smartlift.ibesk.ru.smartliftclient.views.TimerTextView
+                android:id="@+id/timerTv"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:textSize="30sp"/>
     </LinearLayout>
 
     <!--Fragment container-->
     <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_below="@id/test_panel"
-        android:layout_above="@id/timer_panel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:id="@+id/fragment_container"
+            android:layout_below="@id/test_panel"
+            android:layout_above="@id/timer_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     </FrameLayout>
 </RelativeLayout>

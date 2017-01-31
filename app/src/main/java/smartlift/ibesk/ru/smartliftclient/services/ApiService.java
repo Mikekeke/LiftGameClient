@@ -4,32 +4,44 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import smartlift.ibesk.ru.smartliftclient.model.api.ApiRequest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class MyIntentService extends IntentService {
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.*;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
 
-    public MyIntentService() {
-        super("MyIntentService");
+public class ApiService extends IntentService {
+    public static final String EXTRA_METHOD = "ApiService.EXTRA_METHOD";
+    public static final String EXTRA_CONTENT = "ApiService.EXTRA_CONTENT";
+
+    public ApiService() {
+        super("ApiService");
     }
 
     private static final String TAG = "qq";
+    private static final Gson GSON = new Gson();
+
 
     public static void start(Context context) {
-        Intent in = new Intent(context, MyIntentService.class);
+        Intent in = new Intent(context, ApiService.class);
         context.startService(in);
     }
 
     WebSocketClient websc;
+
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-             websc = new WebSocketClient(new URI("ws://192.168.1.30:9000/socket")) {
+//             websc = new WebSocketClient(new URI("ws://192.168.1.30:9000/socket")) {
+            websc = new WebSocketClient(new URI("ws://192.168.2.40:9000/socket")) {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
                     Log.d(TAG, "onOpen: " + handshakedata.getHttpStatus());
@@ -40,7 +52,14 @@ public class MyIntentService extends IntentService {
                 @Override
                 public void onMessage(String message) {
                     Log.d(TAG, "onMessage: " + message);
-
+                    try {
+//                        JsonReader reader = new JsonReader(new StringReader(message));
+//                        reader.setLenient(true);
+                        ApiRequest req = GSON.fromJson(message, ApiRequest.class);
+                        broadcast(req.getMethod(), req.getContent());
+                    } catch (Exception e) {
+                        Log.w("qq", "onMessage: ain't parsable: " + message);
+                    }
                 }
 
                 @Override
@@ -62,44 +81,11 @@ public class MyIntentService extends IntentService {
         } catch (URISyntaxException e) {
             Log.e(TAG, "onHandleIntent: ", e);
         }
-
-
-//        Socket socket = null;
-//        PrintWriter out = null;
-//        BufferedReader in = null;
-//        try {
-//            socket = new Socket("http://localhost/socket", 9000);
-//            out = new PrintWriter(socket.getOutputStream(), true);
-//            in = new BufferedReader(
-//                    new InputStreamReader(socket.getInputStream()));
-//            Log.d("qq", "sending out");
-//            out.println("test");
-//            String line;
-//            while ((line = in.readLine()) != null) {
-//                Log.d("qq", "in: " + line);
-//            }
-//        } catch (IOException e) {
-//            Log.e("qq", "onHandleIntent: ", e);
-//        } finally {
-//            if (socket != null) {
-//                try {
-//                    socket.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            if (out != null) {
-//                out.close();
-//            }
-//            if (in != null) {
-//                try {
-//                    in.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            Log.d("qq", "onHandleIntent: " + "CLOSING");
-//        }
+    }
+    private Intent mBroadcastIntent = new Intent(API_ACTION);
+    private void broadcast(String method, String content) {
+        mBroadcastIntent.putExtra(EXTRA_METHOD, method);
+        mBroadcastIntent.putExtra(EXTRA_CONTENT, content);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mBroadcastIntent);
     }
 }
