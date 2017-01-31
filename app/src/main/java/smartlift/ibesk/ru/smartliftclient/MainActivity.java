@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -164,11 +165,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mQFragment.showAnswer();
                     }
                     break;
-
                 default: //empty
             }
         }
     }
+
+
 
     private void forcePickVariant(String variantNum) {
         if (mQFragment == null) return;
