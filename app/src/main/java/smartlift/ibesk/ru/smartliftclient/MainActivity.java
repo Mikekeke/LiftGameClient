@@ -15,7 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import smartlift.ibesk.ru.smartliftclient.fragments.LogoFragment;
 import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
-import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
 import smartlift.ibesk.ru.smartliftclient.utils.JsonHolder;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startQuestion(String question) {
         if (mTimerPanel.getVisibility() == View.GONE) mTimerPanel.setVisibility(View.VISIBLE);
         insertQuestionFragment(question);
-//        container.setEnabled(true);
         if (mLiftTimer != null) {
             mLiftTimer.start();
         }
@@ -157,8 +155,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case LOGO:
                     showLogo();
+                    break;
+                case PICK_VARIANT:
+                    forcePickVariant(intent.getStringExtra(ApiService.EXTRA_CONTENT));
+                    break;
+                case EXPAND_ANSWER:
+                    if (mQFragment != null) {
+                        mQFragment.showAnswer();
+                    }
+                    break;
+
                 default: //empty
             }
+        }
+    }
+
+    private void forcePickVariant(String variantNum) {
+        if (mQFragment == null) return;
+        try {
+            int num = Integer.parseInt(variantNum);
+            mQFragment.forcePickVariant(num);
+        } catch (NumberFormatException e) {
+            Log.e("qq", "forcePickVariant: ", e);
         }
     }
 
@@ -167,8 +185,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mLiftTimer.pause();
         }
         Fragment fragment = LogoFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().disallowAddToBackStack()
-                .replace(container.getId(), fragment).commit();
+        if (getSupportFragmentManager().findFragmentByTag("logo") == null) {
+            Log.d("qq", "showLogo: ");
+            getSupportFragmentManager().beginTransaction().disallowAddToBackStack()
+                    .replace(container.getId(), fragment, "logo").commit();
+        }
     }
 
     private void endGame() {

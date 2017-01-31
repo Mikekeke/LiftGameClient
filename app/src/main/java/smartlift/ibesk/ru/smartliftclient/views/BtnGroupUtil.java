@@ -37,7 +37,6 @@ public class BtnGroupUtil {
         mButtonsMap.get(mCurrentClickedId).setBackgroundColor(Color.YELLOW);
     }
 
-
     public boolean handleCheck(int correctVar) {
         if (mCurrentClickedId == -1) return false;
         if (mCurrentClickedId == mVarId2BtnId.get(correctVar)) {
@@ -48,5 +47,12 @@ public class BtnGroupUtil {
             mButtonsMap.get(mVarId2BtnId.get(correctVar)).setBackgroundColor(Color.GREEN);
             return false;
         }
+    }
+
+    public void pickVariant(int num) {
+        int btnId = mVarId2BtnId.get(num);
+        Button btn = mButtonsMap.get(btnId);
+        btn.performClick();
+        handleColoring(btnId);
     }
 }
