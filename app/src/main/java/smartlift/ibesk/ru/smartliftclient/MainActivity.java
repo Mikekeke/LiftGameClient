@@ -4,16 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
-
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import smartlift.ibesk.ru.smartliftclient.fragments.LogoFragment;
 import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
@@ -21,8 +23,13 @@ import smartlift.ibesk.ru.smartliftclient.utils.JsonHolder;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
 import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.*;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.CHECK;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.EXPAND_ANSWER;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.LOGO;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.PICK_VARIANT;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.QUESTION;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         QuestionFragment.AnswerListener, LiftTimer.TimeFinishListener {
@@ -30,22 +37,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TimerTextView mTimerTv;
     private LinearLayout mTimerPanel;
-    private final long TEST_TIME = 10 * 1000;
+    private long TEST_TIME = 10 * 1000;
     private long DEADLINE = 6 * 1000;
     private LiftTimer mLiftTimer;
     private QuestionFragment mQFragment;
     private FrameLayout container;
     private BroadcastReceiver mReceiver;
+    private TextView mOnlineTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mOnlineTv = (TextView) findViewById(R.id.onlineTv);
         mTimerPanel = (LinearLayout) findViewById(R.id.timer_panel);
         mTimerTv = (TimerTextView) findViewById(R.id.timerTv);
-        mTimerTv.setDeadline(DEADLINE);
-        mTimerTv.setTimerText(TEST_TIME);
-        mLiftTimer = new LiftTimer(TEST_TIME, mTimerTv, this);
         findViewById(R.id.btnLoadQuestion).setOnClickListener(this);
         findViewById(R.id.btnStartTimer).setOnClickListener(this);
         findViewById(R.id.btnPauseTimer).setOnClickListener(this);
@@ -53,10 +59,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnCheck).setOnClickListener(this);
         findViewById(R.id.btnAnswer).setOnClickListener(this);
         findViewById(R.id.btnServer).setOnClickListener(this);
+        findViewById(R.id.btnLogo).setOnClickListener(this);
         container = (FrameLayout) findViewById(R.id.fragment_container);
         mReceiver = new ApiReceiver();
+
+
+        EditText etTimeRedr = (EditText) findViewById(R.id.timerRedEt);
+        etTimeRedr.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                testInitTimer();
+                return false;
+            }
+        });
+        EditText etTime = (EditText) findViewById(R.id.timerTimeEt);
+        etTime.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                testInitTimer();
+                return false;
+            }
+        });
+        DEADLINE = (Long.parseLong(
+                (etTimeRedr).getText().toString()
+                                  ) + 1) * 1000;
+        TEST_TIME = (Long.parseLong(
+                (etTime).getText().toString()
+                                  ) + 0) * 1000;
+
+        mTimerTv.setTimerText(TEST_TIME);
+        mTimerTv.setDeadline(DEADLINE);
+        mLiftTimer = new LiftTimer(TEST_TIME, mTimerTv, this);
+        
         showLogo();
 
+    }
+    
+    private void testInitTimer() {
+        DEADLINE = (Long.parseLong(
+                ((EditText) findViewById(R.id.timerRedEt)).getText().toString()
+                                  ) + 1) * 1000;
+        TEST_TIME = (Long.parseLong(
+                ((EditText) findViewById(R.id.timerTimeEt)).getText().toString()
+                                   ) + 0) * 1000;
+
+        mTimerTv.setTimerText(TEST_TIME);
+        mTimerTv.setDeadline(DEADLINE);
+        mLiftTimer = new LiftTimer(TEST_TIME, mTimerTv, this);
     }
 
     @Override
@@ -114,6 +163,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (mQFragment != null) {
                     mQFragment.showAnswer();
                 }
+                break;
+            case R.id.btnLogo:
+                showLogo();
+                break;
 
             case R.id.btnServer:
                 ApiService.start(this);
@@ -165,6 +218,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mQFragment.showAnswer();
                     }
                     break;
+                case STATUS:
+                    if (mOnlineTv != null) {
+                        mOnlineTv.setText(intent.getStringExtra(ApiService.EXTRA_CONTENT));
+                    }
                 default: //empty
             }
         }

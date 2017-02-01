@@ -2,25 +2,27 @@ package smartlift.ibesk.ru.smartliftclient.services;
 
 import android.app.Activity;
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
 import android.view.View;
+
 import com.google.gson.Gson;
+
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-import smartlift.ibesk.ru.smartliftclient.model.api.ApiRequest;
 
 import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.*;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
+import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketException;
+import de.tavendo.autobahn.WebSocketHandler;
+import de.tavendo.autobahn.WebSocketOptions;
+import smartlift.ibesk.ru.smartliftclient.model.api.ApiRequest;
+import smartlift.ibesk.ru.smartliftclient.sockets.ImageSocket;
+
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
 
 public class ApiService extends IntentService {
     public static final String EXTRA_METHOD = "ApiService.EXTRA_METHOD";
@@ -35,6 +37,8 @@ public class ApiService extends IntentService {
 
     private static Activity mActivity;
 
+    private ImageSocket mImgSocket;
+
 
     public static void start(Activity context) {
         mActivity = context;
@@ -42,107 +46,122 @@ public class ApiService extends IntentService {
         context.startService(in);
     }
 
-    WebSocketClient websc;
 
     @Override
     protected void onHandleIntent(Intent intent) {
+//        imgSocket();
+//        stringSocket();
         try {
-//             websc = new WebSocketClient(new URI("ws://192.168.1.30:9000/socket")) {
-            websc = new WebSocketClient(new URI("ws://192.168.2.40:9000/socket")) {
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
-                    Log.d(TAG, "onOpen: " + handshakedata.getHttpStatus());
-                    Log.d(TAG, "onOpen: " + handshakedata.getHttpStatusMessage());
-                    websc.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
-                }
-
-                @Override
-                public void onMessage(String message) {
-                    Log.d(TAG, "onMessage: " + message);
-                    try {
-//                        JsonReader reader = new JsonReader(new StringReader(message));
-//                        reader.setLenient(true);
-                        ApiRequest req = GSON.fromJson(message, ApiRequest.class);
-                        if (req.getMethod().equals("screenshot"))
-                            makeScreenshot();
-                        else
-                            broadcast(req.getMethod(), req.getContent());
-                    } catch (Exception e) {
-                        Log.w("qq", "onMessage: ain't parsable: " + message);
-                    }
-                }
-
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    Log.d(TAG, "onClose: ");
-
-                }
-
-                @Override
-                public void onError(Exception ex) {
-                    Log.e(TAG, "onError: ", ex);
-
-                }
-            };
-            websc.connect();
-//            websc.send("Test");
-//            websc.close();
-
-        } catch (URISyntaxException e) {
-            Log.e(TAG, "onHandleIntent: ", e);
+            autbnSocket();
+        } catch (WebSocketException e) {
+            Log.e(TAG, "Autobahn socket error: ", e);
         }
+
     }
 
     private Intent mBroadcastIntent = new Intent(API_ACTION);
+
     private void broadcast(String method, String content) {
         mBroadcastIntent.putExtra(EXTRA_METHOD, method);
         mBroadcastIntent.putExtra(EXTRA_CONTENT, content);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mBroadcastIntent);
     }
 
+    WebSocketClient websc;
 
-    WebSocketClient imgSocket = null;
+
+    private final WebSocketConnection mConnection = new WebSocketConnection();
+
+    private void autbnSocket() throws WebSocketException {
+        WebSocketOptions options = new WebSocketOptions();
+        options.setSocketConnectTimeout(2000);
+        options.setMaxFramePayloadSize(1000000);
+        options.setMaxMessagePayloadSize(1000000);
+        mConnection.connect("ws://192.168.2.40:9000/socket", handler, options);
+    }
+
+    private WebSocketHandler handler = new WebSocketHandler() {
+        @Override
+        public void onOpen() {
+            super.onOpen();
+
+            Log.d(TAG, "onOpen: ");
+            broadcast(STATUS, "ONLINE");
+            mConnection.sendTextMessage("test");
+        }
+
+        @Override
+        public void onClose(int code, String reason) {
+            super.onClose(code, reason);
+            broadcast(STATUS, "OFFLINE");
+            Log.d(TAG, "onClose: " + "code" + " - " + reason);
+        }
+
+        @Override
+        public void onTextMessage(String message) {
+            super.onTextMessage(message);
+            Log.d(TAG, "onMessage: " + message);
+            try {
+//                        JsonReader reader = new JsonReader(new StringReader(message));
+//                        reader.setLenient(true);
+                ApiRequest req = GSON.fromJson(message, ApiRequest.class);
+                if (req.getMethod().equals("screenshot"))
+                    makeScreenshot();
+                else
+                    broadcast(req.getMethod(), req.getContent());
+            } catch (Exception e) {
+                Log.w("qq", "onMessage: ain't parsable: " + message);
+            }
+        }
+
+        @Override
+        public void onRawTextMessage(byte[] payload) {
+            super.onRawTextMessage(payload);
+            Log.d(TAG, "onRawTextMessage: ");
+        }
+
+        @Override
+        public void onBinaryMessage(byte[] payload) {
+            super.onBinaryMessage(payload);
+
+        }
+    };
+
     private void makeScreenshot() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mImgSocket == null) {
+                    mImgSocket = new ImageSocket();
+                }
+                if (!mImgSocket.isConnected())
+                    try {
+                        mImgSocket.connect("ws://192.168.2.40:9000/imgsocket");
+                    } catch (WebSocketException e) {
+                        Log.e(TAG, "run: ", e);
+                    }
+                try {
+                    mImgSocket.getLatch().await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mImgSocket.sendBinaryMessage(getImgAsBytes());
+            }
+        }).start();
+
+    }
+
+    private byte[] getImgAsBytes() {
         View v = mActivity.getWindow().getDecorView().getRootView();
         v.setDrawingCacheEnabled(true);
         Bitmap bm = Bitmap.createBitmap(v.getDrawingCache());
         v.setDrawingCacheEnabled(false);
         Log.d("qq", "makeScreenshot: ");
+        Bitmap resizedBm = Bitmap.createScaledBitmap(bm, bm.getWidth() / 7, bm.getHeight() / 7, false);
+        bm.recycle();
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 20, bos);
-        final byte[] byteArr = bos.toByteArray();
-        try {
-             imgSocket = new WebSocketClient(new URI("ws://192.168.2.40:9000/imgsocket")) {
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
-                    Log.d(TAG, "Connected to img socket");
-                    imgSocket.send("test");
-//                    imgSocket.close();
-
-                }
-
-                @Override
-                public void onMessage(String message) {
-                    Log.d(TAG, "onMessage: " + message);
-
-                }
-
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    Log.d(TAG, "onClose: ");
-
-                }
-
-                @Override
-                public void onError(Exception ex) {
-                    Log.e(TAG, "onError: ", ex);
-
-                }
-            };
-             websc.connect();
-        } catch (URISyntaxException e) {
-            Log.e(TAG, "makeScreenshot: ", e);
-        }
+        resizedBm.compress(Bitmap.CompressFormat.PNG, 20, bos);
+        return bos.toByteArray();
     }
 }

@@ -88,7 +88,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             Button v4btn = (Button) v.findViewById(R.id.v_4);
             v4btn.setText(mQ.getVariants().get(4).getText());
             buttonsMap.put(4, v4btn);
-            mBtnGroup = new BtnGroupUtil(this, buttonsMap);
+            mBtnGroup = new BtnGroupUtil(getContext(), this, buttonsMap);
         }
         return v;
     }
@@ -122,7 +122,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
     public void check() {
         boolean correct = mBtnGroup.handleCheck(mCorrectVar);
-        Toast.makeText(getContext(), correct ? "Correct!" : "Error!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), correct ? "Правильно!" : "Ошибка!", Toast.LENGTH_SHORT).show();
     }
 
     public void showAnswer() {

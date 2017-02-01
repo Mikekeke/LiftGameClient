@@ -22,7 +22,7 @@
             android:layout_alignBottom="@id/myImageView"
             android:layout_margin="1dp"
             android:gravity="center"
-            android:text="YOU LOST \u263B"
+            android:text="\u263B ! ВРЕМЯ ВЫШЛО ! \u263B"
             android:textStyle="bold"
             android:textSize="90sp"
             android:textColor="@color/colorLost"

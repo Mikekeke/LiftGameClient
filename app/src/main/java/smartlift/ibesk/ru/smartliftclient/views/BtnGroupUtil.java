@@ -1,25 +1,29 @@
 package smartlift.ibesk.ru.smartliftclient.views;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import smartlift.ibesk.ru.smartliftclient.R;
+
 /**
  * Created by Mikekeke on 30-Jan-17.
  */
 
 public class BtnGroupUtil {
-    private Drawable mDefBg;
-    private Drawable mClickedBg;
+    private Drawable mDefBg, mPressedBg, mCorrectBg, mWrongBg;
     private Map<Integer, Button> mButtonsMap = new HashMap<>();
     private Map<Integer, Integer> mVarId2BtnId = new HashMap<>();
     private int mCurrentClickedId = -1;
+    private Context mContext;
 
-    public BtnGroupUtil(View.OnClickListener listener, Map<Integer, Button> buttons) {
+    public BtnGroupUtil(Context context, View.OnClickListener listener, Map<Integer, Button> buttons) {
         for (Map.Entry<Integer, Button> entry : buttons.entrySet()) {
             Button button = entry.getValue();
             button.setOnClickListener(listener);
@@ -27,6 +31,10 @@ public class BtnGroupUtil {
             mVarId2BtnId.put(entry.getKey(), button.getId());
         }
         mDefBg = buttons.get(1).getBackground();
+        mContext = context;
+        mPressedBg = ContextCompat.getDrawable(mContext, R.drawable.bg_pressed_btn);
+        mCorrectBg = ContextCompat.getDrawable(mContext, R.drawable.bg_correct_button);
+        mWrongBg = ContextCompat.getDrawable(mContext, R.drawable.bg_wrong_button);
     }
 
     public void handleColoring(int id) {
@@ -34,17 +42,17 @@ public class BtnGroupUtil {
             mButtonsMap.get(mCurrentClickedId).setBackground(mDefBg);
         }
         mCurrentClickedId = id;
-        mButtonsMap.get(mCurrentClickedId).setBackgroundColor(Color.YELLOW);
+        mButtonsMap.get(mCurrentClickedId).setBackground(mPressedBg);
     }
 
     public boolean handleCheck(int correctVar) {
         if (mCurrentClickedId == -1) return false;
         if (mCurrentClickedId == mVarId2BtnId.get(correctVar)) {
-            mButtonsMap.get(mCurrentClickedId).setBackgroundColor(Color.GREEN);
+            mButtonsMap.get(mCurrentClickedId).setBackground(mCorrectBg);
             return true;
         } else {
-            mButtonsMap.get(mCurrentClickedId).setBackgroundColor(Color.RED);
-            mButtonsMap.get(mVarId2BtnId.get(correctVar)).setBackgroundColor(Color.GREEN);
+            mButtonsMap.get(mCurrentClickedId).setBackground(mWrongBg);
+            mButtonsMap.get(mVarId2BtnId.get(correctVar)).setBackground(mCorrectBg);
             return false;
         }
     }

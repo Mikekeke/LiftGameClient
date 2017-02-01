@@ -13,7 +13,8 @@
         android:layout_marginBottom="15dp"
         android:textSize="30sp"
         android:textStyle="bold"
-        tools:text="Question name" />
+        tools:text="Question name"
+        android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/q_text"
@@ -22,7 +23,8 @@
         android:layout_below="@+id/q_name"
         android:layout_marginBottom="30dp"
         android:textSize="30sp"
-        tools:text="Question text text text text text" />
+        tools:text="Question text text text text text" 
+        android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/q_answer"
@@ -39,52 +41,46 @@
     <!--buttons-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/q_answer"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <Button
                 android:id="@+id/v_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/VariantButtonStyle"
                 tools:text="variant one text"
                 android:textAllCaps="false"/>
 
             <Button
                 android:id="@+id/v_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/VariantButtonStyle"
                 tools:text="variant two text"
                 android:textAllCaps="false"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <Button
                 android:id="@+id/v_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/VariantButtonStyle"
                 tools:text="variant three text"
                 android:textAllCaps="false"/>
 
             <Button
                 android:id="@+id/v_4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/VariantButtonStyle"
                 tools:text="variant four text"
                 android:textAllCaps="false"/>
         </LinearLayout>

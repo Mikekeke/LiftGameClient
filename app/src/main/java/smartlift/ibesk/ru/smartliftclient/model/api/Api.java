@@ -11,6 +11,7 @@ public final class Api {
         public static final String PICK_VARIANT = "pick_variant";
         public static final String EXPAND_ANSWER = "expand_answer";
         public static final String SCREENSHOT = "screenshot";
+        public static final String STATUS = "status";
     }
 
     public final class ACTION {
