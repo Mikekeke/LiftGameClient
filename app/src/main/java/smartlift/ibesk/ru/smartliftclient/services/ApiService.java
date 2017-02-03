@@ -2,27 +2,23 @@ package smartlift.ibesk.ru.smartliftclient.services;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
 
 import com.google.gson.Gson;
-
-import org.java_websocket.client.WebSocketClient;
-
-import java.io.ByteArrayOutputStream;
 
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
 import de.tavendo.autobahn.WebSocketHandler;
 import de.tavendo.autobahn.WebSocketOptions;
+import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.model.api.ApiRequest;
 import smartlift.ibesk.ru.smartliftclient.sockets.ImageSocket;
 
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.*;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
 
 public class ApiService extends IntentService {
     public static final String EXTRA_METHOD = "ApiService.EXTRA_METHOD";
@@ -35,13 +31,11 @@ public class ApiService extends IntentService {
     private static final String TAG = "qq";
     private static final Gson GSON = new Gson();
 
-    private static Activity mActivity;
 
     private ImageSocket mImgSocket;
 
 
     public static void start(Activity context) {
-        mActivity = context;
         Intent in = new Intent(context, ApiService.class);
         context.startService(in);
     }
@@ -53,10 +47,17 @@ public class ApiService extends IntentService {
 //        stringSocket();
         try {
             autbnSocket();
+            Log.d(TAG, "ApiService onHandleIntent: ");
         } catch (WebSocketException e) {
             Log.e(TAG, "Autobahn socket error: ", e);
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "ApiService onDestroy: ");
     }
 
     private Intent mBroadcastIntent = new Intent(API_ACTION);
@@ -67,17 +68,18 @@ public class ApiService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(mBroadcastIntent);
     }
 
-    WebSocketClient websc;
 
 
-    private final WebSocketConnection mConnection = new WebSocketConnection();
+    private static final WebSocketConnection CONNECTION = new WebSocketConnection();
 
     private void autbnSocket() throws WebSocketException {
-        WebSocketOptions options = new WebSocketOptions();
-        options.setSocketConnectTimeout(2000);
-        options.setMaxFramePayloadSize(1000000);
-        options.setMaxMessagePayloadSize(1000000);
-        mConnection.connect("ws://192.168.2.40:9000/socket", handler, options);
+        if (!CONNECTION.isConnected()) {
+            WebSocketOptions options = new WebSocketOptions();
+            options.setSocketConnectTimeout(2000);
+            options.setMaxFramePayloadSize(1000000);
+            options.setMaxMessagePayloadSize(1000000);
+            CONNECTION.connect("ws://192.168.2.40:9000/socket", handler, options);
+        }
     }
 
     private WebSocketHandler handler = new WebSocketHandler() {
@@ -86,14 +88,14 @@ public class ApiService extends IntentService {
             super.onOpen();
 
             Log.d(TAG, "onOpen: ");
-            broadcast(STATUS, "ONLINE");
-            mConnection.sendTextMessage("test");
+            broadcast(STATUS, Api.SOCKET.UP);
+            CONNECTION.sendTextMessage("test");
         }
 
         @Override
         public void onClose(int code, String reason) {
             super.onClose(code, reason);
-            broadcast(STATUS, "OFFLINE");
+            broadcast(STATUS, Api.SOCKET.DOWN);
             Log.d(TAG, "onClose: " + "code" + " - " + reason);
         }
 
@@ -106,7 +108,8 @@ public class ApiService extends IntentService {
 //                        reader.setLenient(true);
                 ApiRequest req = GSON.fromJson(message, ApiRequest.class);
                 if (req.getMethod().equals("screenshot"))
-                    makeScreenshot();
+//                    makeScreenshot();
+                    Log.d(TAG, "Screenshot");
                 else
                     broadcast(req.getMethod(), req.getContent());
             } catch (Exception e) {
@@ -145,23 +148,26 @@ public class ApiService extends IntentService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                mImgSocket.sendBinaryMessage(getImgAsBytes());
+//                mImgSocket.sendBinaryMessage(getImgAsBytes());
             }
         }).start();
 
     }
 
-    private byte[] getImgAsBytes() {
-        View v = mActivity.getWindow().getDecorView().getRootView();
-        v.setDrawingCacheEnabled(true);
-        Bitmap bm = Bitmap.createBitmap(v.getDrawingCache());
-        v.setDrawingCacheEnabled(false);
-        Log.d("qq", "makeScreenshot: ");
-        Bitmap resizedBm = Bitmap.createScaledBitmap(bm, bm.getWidth() / 7, bm.getHeight() / 7, false);
-        bm.recycle();
+//    private byte[] getImgAsBytes() {
+//        View v = mActivity.getWindow().getDecorView().getRootView();
+//        v.setDrawingCacheEnabled(true);
+//        Bitmap bm = Bitmap.createBitmap(v.getDrawingCache());
+//        v.setDrawingCacheEnabled(false);
+//        Log.d("qq", "makeScreenshot: ");
+//        Bitmap resizedBm = Bitmap.createScaledBitmap(bm, bm.getWidth() / 7, bm.getHeight() / 7, false);
+//        bm.recycle();
+//
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        resizedBm.compress(Bitmap.CompressFormat.PNG, 20, bos);
+//        return bos.toByteArray();
+//    }
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        resizedBm.compress(Bitmap.CompressFormat.PNG, 20, bos);
-        return bos.toByteArray();
+    public static void closeConnection() {
     }
 }

@@ -11,8 +11,10 @@ public class Question implements Serializable{
     private int num;
     private String name;
     private String question, answer;
-    private Map<Integer, Variant> variants;
+    private Map<Integer, String> variants;
     private int correctVar;
+    private int status;
+    private String img1, img2;
 
     public int getCorrectVar() {
         return correctVar;
@@ -38,16 +40,13 @@ public class Question implements Serializable{
         return question;
     }
 
-    public QStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public Map<Integer, Variant> getVariants() {
+    public Map<Integer, String> getVariants() {
         return variants;
     }
-
-    private QStatus status;
-    private String img1, img2;
 
     public String getAnswer() {
         return answer;

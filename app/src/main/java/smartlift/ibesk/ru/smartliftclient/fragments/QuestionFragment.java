@@ -1,5 +1,6 @@
 package smartlift.ibesk.ru.smartliftclient.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,10 +52,13 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         if (getArguments() != null) {
             String qString = getArguments().getString(ARG_QUESTION).trim();
             try {
+//                qString = qString.substring(1, 49);
                 JsonReader reader = new JsonReader(new StringReader(qString));
                 reader.setLenient(true);
                 mQ = gson.fromJson(reader, Question.class);
             } catch (Exception e) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, LogoFragment.newInstance()).commit();
                 Log.e("qq", "onCreate: ", e);
             }
         }
@@ -75,18 +79,19 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             mAnswertV.setText(mQ.getAnswer());
 
             // Setting up buttons
+            @SuppressLint("UseSparseArrays")
             Map<Integer, Button> buttonsMap = new HashMap<>();
             Button v1btn = (Button) v.findViewById(R.id.v_1);
-            v1btn.setText(mQ.getVariants().get(1).getText());
+            v1btn.setText(mQ.getVariants().get(1));
             buttonsMap.put(1, v1btn);
             Button v2btn = (Button) v.findViewById(R.id.v_2);
-            v2btn.setText(mQ.getVariants().get(2).getText());
+            v2btn.setText(mQ.getVariants().get(2));
             buttonsMap.put(2, v2btn);
             Button v3btn = (Button) v.findViewById(R.id.v_3);
-            v3btn.setText(mQ.getVariants().get(3).getText());
+            v3btn.setText(mQ.getVariants().get(3));
             buttonsMap.put(3, v3btn);
             Button v4btn = (Button) v.findViewById(R.id.v_4);
-            v4btn.setText(mQ.getVariants().get(4).getText());
+            v4btn.setText(mQ.getVariants().get(4));
             buttonsMap.put(4, v4btn);
             mBtnGroup = new BtnGroupUtil(getContext(), this, buttonsMap);
         }

@@ -1,5 +1,7 @@
 package smartlift.ibesk.ru.smartliftclient;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,18 +20,14 @@ import android.widget.TextView;
 
 import smartlift.ibesk.ru.smartliftclient.fragments.LogoFragment;
 import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
+import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
 import smartlift.ibesk.ru.smartliftclient.utils.JsonHolder;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
 import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.CHECK;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.EXPAND_ANSWER;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.LOGO;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.PICK_VARIANT;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.QUESTION;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         QuestionFragment.AnswerListener, LiftTimer.TimeFinishListener {
@@ -49,6 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Start socket service
+        ApiService.start(this);
+
+        // GUI
         mOnlineTv = (TextView) findViewById(R.id.onlineTv);
         mTimerPanel = (LinearLayout) findViewById(R.id.timer_panel);
         mTimerTv = (TimerTextView) findViewById(R.id.timerTv);
@@ -64,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mReceiver = new ApiReceiver();
 
 
-        EditText etTimeRedr = (EditText) findViewById(R.id.timerRedEt);
-        etTimeRedr.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        EditText etTimeRed = (EditText) findViewById(R.id.timerRedEt);
+        etTimeRed.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 testInitTimer();
@@ -80,28 +83,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
-        DEADLINE = (Long.parseLong(
-                (etTimeRedr).getText().toString()
-                                  ) + 1) * 1000;
-        TEST_TIME = (Long.parseLong(
-                (etTime).getText().toString()
-                                  ) + 0) * 1000;
+
+        //Timer stuff
+        DEADLINE = (Long.parseLong((etTimeRed).getText().toString()) + 1) * 1000;
+        TEST_TIME = (Long.parseLong((etTime).getText().toString())) * 1000;
 
         mTimerTv.setTimerText(TEST_TIME);
         mTimerTv.setDeadline(DEADLINE);
         mLiftTimer = new LiftTimer(TEST_TIME, mTimerTv, this);
-        
+
         showLogo();
 
     }
-    
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void testInitTimer() {
         DEADLINE = (Long.parseLong(
-                ((EditText) findViewById(R.id.timerRedEt)).getText().toString()
-                                  ) + 1) * 1000;
+                ((TextView) findViewById(R.id.timerRedEt)).getText().toString()
+        ) + 1) * 1000;
         TEST_TIME = (Long.parseLong(
-                ((EditText) findViewById(R.id.timerTimeEt)).getText().toString()
-                                   ) + 0) * 1000;
+                ((TextView) findViewById(R.id.timerTimeEt)).getText().toString()
+        )) * 1000;
 
         mTimerTv.setTimerText(TEST_TIME);
         mTimerTv.setDeadline(DEADLINE);
@@ -220,13 +226,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case STATUS:
                     if (mOnlineTv != null) {
-                        mOnlineTv.setText(intent.getStringExtra(ApiService.EXTRA_CONTENT));
+                        String status = intent.getStringExtra(ApiService.EXTRA_CONTENT);
+                        mOnlineTv.setText(status);
+                        if (Api.SOCKET.DOWN.equals(status))
+                            rescheduleConnection();
                     }
+                    break;
                 default: //empty
             }
         }
     }
 
+    private void rescheduleConnection() {
+        Log.d("qq", "rescheduleConnection: ");
+        Intent intent = new Intent(this, ApiService.class);
+        PendingIntent pint = PendingIntent.getService(this, 0, intent, 0);
+        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarm.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pint);
+    }
 
 
     private void forcePickVariant(String variantNum) {
@@ -246,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment fragment = LogoFragment.newInstance();
         if (getSupportFragmentManager().findFragmentByTag("logo") == null) {
             Log.d("qq", "showLogo: ");
-            getSupportFragmentManager().beginTransaction().disallowAddToBackStack()
+            getSupportFragmentManager().beginTransaction()
                     .replace(container.getId(), fragment, "logo").commit();
         }
     }
@@ -254,6 +271,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void endGame() {
         Fragment fragment = LogoFragment.endGameInstance();
         getSupportFragmentManager().beginTransaction().disallowAddToBackStack()
-                .replace(container.getId(), fragment).commit();
+                .replace(container.getId(), fragment).commitAllowingStateLoss();
     }
 }
