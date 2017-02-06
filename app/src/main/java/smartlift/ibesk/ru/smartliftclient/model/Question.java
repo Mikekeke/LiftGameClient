@@ -13,7 +13,7 @@ public class Question implements Serializable{
     private String question, answer;
     private Map<Integer, String> variants;
     private int correctVar;
-    private int status;
+    private String status;
     private String img1, img2;
 
     public int getCorrectVar() {
@@ -40,7 +40,7 @@ public class Question implements Serializable{
         return question;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 

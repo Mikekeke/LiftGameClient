@@ -2,11 +2,9 @@ package smartlift.ibesk.ru.smartliftclient;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -42,11 +40,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FrameLayout container;
     private BroadcastReceiver mReceiver;
     private TextView mOnlineTv;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String url = mPrefs.getString(ApiService.WS_URL, "");
+        if (url.isEmpty()){
+            startActivity(new Intent(this, StartActivity.class));
+            return;
+        }
 
         // Start socket service
         ApiService.start(this);
@@ -189,10 +194,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onAnswer() {
+    public void onAnswer(int clickedVariantId) {
+        Log.d("qq", "onAnswer: ");
         if (mLiftTimer != null) {
             mLiftTimer.pause();
         }
+        ApiService.sendTelemetry("Clicked variant #" + clickedVariantId);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package smartlift.ibesk.ru.smartliftclient.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -18,7 +19,9 @@ import smartlift.ibesk.ru.smartliftclient.R;
 
 public class BtnGroupUtil {
     private Drawable mDefBg, mPressedBg, mCorrectBg, mWrongBg;
+    @SuppressLint("UseSparseArrays")
     private Map<Integer, Button> mButtonsMap = new HashMap<>();
+    @SuppressLint("UseSparseArrays")
     private Map<Integer, Integer> mVarId2BtnId = new HashMap<>();
     private int mCurrentClickedId = -1;
     private Context mContext;
@@ -43,6 +46,14 @@ public class BtnGroupUtil {
         }
         mCurrentClickedId = id;
         mButtonsMap.get(mCurrentClickedId).setBackground(mPressedBg);
+    }
+
+    public int getCkickedVariantId(int viewId) {
+        for (int key : mVarId2BtnId.keySet()) {
+            if (mVarId2BtnId.get(key) == viewId)
+                return key;
+        }
+        return -1;
     }
 
     public boolean handleCheck(int correctVar) {

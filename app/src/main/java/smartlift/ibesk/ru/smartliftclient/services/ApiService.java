@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -23,6 +25,7 @@ import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
 public class ApiService extends IntentService {
     public static final String EXTRA_METHOD = "ApiService.EXTRA_METHOD";
     public static final String EXTRA_CONTENT = "ApiService.EXTRA_CONTENT";
+    public static final String WS_URL = "ApiService.WS_URL";
 
     public ApiService() {
         super("ApiService");
@@ -33,9 +36,12 @@ public class ApiService extends IntentService {
 
 
     private ImageSocket mImgSocket;
+    private static SharedPreferences mPrefs;
+    private final String WSURL = mPrefs.getString(WS_URL, "");
 
 
     public static void start(Activity context) {
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         Intent in = new Intent(context, ApiService.class);
         context.startService(in);
     }
@@ -69,16 +75,17 @@ public class ApiService extends IntentService {
     }
 
 
-
     private static final WebSocketConnection CONNECTION = new WebSocketConnection();
 
     private void autbnSocket() throws WebSocketException {
+        if (WSURL.isEmpty()) return;
+
         if (!CONNECTION.isConnected()) {
             WebSocketOptions options = new WebSocketOptions();
             options.setSocketConnectTimeout(2000);
             options.setMaxFramePayloadSize(1000000);
             options.setMaxMessagePayloadSize(1000000);
-            CONNECTION.connect("ws://192.168.2.40:9000/socket", handler, options);
+            CONNECTION.connect(WSURL, handler, options);
         }
     }
 
@@ -129,6 +136,11 @@ public class ApiService extends IntentService {
 
         }
     };
+
+    public static void sendTelemetry(String message) {
+        if (CONNECTION.isConnected())
+            CONNECTION.sendTextMessage(message);
+    }
 
     private void makeScreenshot() {
         new Thread(new Runnable() {

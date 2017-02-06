@@ -117,11 +117,11 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (mListener != null) {
-            mListener.onAnswer();
-        }
         if (mBtnGroup != null) {
             mBtnGroup.handleColoring(v.getId());
+        }
+        if (mListener != null) {
+            mListener.onAnswer(mBtnGroup.getCkickedVariantId(v.getId()));
         }
     }
 
@@ -144,6 +144,6 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     }
 
     public interface AnswerListener {
-        void onAnswer();
+        void onAnswer(int variantNumber);
     }
 }
