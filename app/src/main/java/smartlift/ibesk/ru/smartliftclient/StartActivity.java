@@ -26,7 +26,7 @@ public class StartActivity extends AppCompatActivity {
         if (ipTv == null) return;
         String ip = ipTv.getText().toString();
         if (TextUtils.isEmpty(ip)) return;
-        String wsUrl = "ws://" + ip +":9000/socket";
+        String wsUrl = "ws://" + ip +":9000/clientSocket";
         mPrefs.edit().putString(ApiService.WS_URL, wsUrl).apply();
         startActivity(new Intent(this, MainActivity.class));
 

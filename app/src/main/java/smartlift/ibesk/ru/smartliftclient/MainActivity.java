@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mLiftTimer != null) {
             mLiftTimer.pause();
         }
-        ApiService.sendTelemetry("Clicked variant #" + clickedVariantId);
+        ApiService.sendTelemetry("telemetry-" + clickedVariantId);
     }
 
     @Override
