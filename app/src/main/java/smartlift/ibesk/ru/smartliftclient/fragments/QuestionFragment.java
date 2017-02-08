@@ -77,7 +77,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             qTextTv.setText(mQ.getQuestion());
             mCorrectVar = mQ.getCorrectVar();
             mAnswertV = (TextView) v.findViewById(R.id.q_answer);
-            mAnswertV.setText(mQ.getAnswer());
+            mAnswertV.setText("ОТВЕТ:\n" + mQ.getAnswer());
 
             // Setting up buttons
             @SuppressLint("UseSparseArrays")

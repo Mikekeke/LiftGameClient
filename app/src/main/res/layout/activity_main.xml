@@ -20,54 +20,10 @@
         android:paddingRight="10dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:textSize="20sp"
-            android:text="Тест-панель:" />
-
-        <Button
-            android:id="@+id/btnLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="22sp"
-            android:textColor="@color/colorLost"
-            android:text="СТОП" />
-
-        <Button
-            android:id="@+id/btnStartTimer"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Таймер старт" />
-
-        <Button
-            android:id="@+id/btnPauseTimer"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Таймер стоп" />
-
-        <Button
-            android:id="@+id/btnResetTimer"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Таймер сброс" />
-
-        <Button
-            android:id="@+id/btnCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Проверить" />
-
-        <Button
-            android:id="@+id/btnAnswer"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Ответ" />
-
-        <TextView
             android:id="@+id/onlineTv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="viewEnd"
             android:text="OFFLINE"
             android:textSize="20sp"
             android:textStyle="bold" />

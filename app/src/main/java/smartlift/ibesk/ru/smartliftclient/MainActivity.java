@@ -2,7 +2,11 @@ package smartlift.ibesk.ru.smartliftclient;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,12 +25,19 @@ import smartlift.ibesk.ru.smartliftclient.fragments.LogoFragment;
 import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
 import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
-import smartlift.ibesk.ru.smartliftclient.utils.JsonHolder;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
 import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.CHECK;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.EXPAND_ANSWER;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.LOGO;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.PICK_VARIANT;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.QUESTION;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_RESET;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_START;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_STOP;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         QuestionFragment.AnswerListener, LiftTimer.TimeFinishListener {
@@ -54,19 +65,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        // Start socket service
-        ApiService.start(this);
+
 
         // GUI
         mOnlineTv = (TextView) findViewById(R.id.onlineTv);
         mTimerPanel = (LinearLayout) findViewById(R.id.timer_panel);
         mTimerTv = (TimerTextView) findViewById(R.id.timerTv);
-        findViewById(R.id.btnStartTimer).setOnClickListener(this);
-        findViewById(R.id.btnPauseTimer).setOnClickListener(this);
-        findViewById(R.id.btnResetTimer).setOnClickListener(this);
-        findViewById(R.id.btnCheck).setOnClickListener(this);
-        findViewById(R.id.btnAnswer).setOnClickListener(this);
-        findViewById(R.id.btnLogo).setOnClickListener(this);
         container = (FrameLayout) findViewById(R.id.fragment_container);
         mReceiver = new ApiReceiver();
 
@@ -100,9 +104,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
     }
 
     private void testInitTimer() {
@@ -121,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        // Start socket service
+        ApiService.start(this);
         if (mReceiver != null) {
             LocalBroadcastManager.getInstance(this)
                     .registerReceiver(mReceiver, new IntentFilter(API_ACTION));
@@ -130,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        ApiService.goOffline();
         if (mReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         }
@@ -146,35 +155,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnStartTimer:
-                if (mLiftTimer != null) {
-                    mLiftTimer.start();
-                }
-                break;
-            case R.id.btnPauseTimer:
-                if (mLiftTimer != null) {
-                    mLiftTimer.pause();
-                }
-                break;
-            case R.id.btnResetTimer:
-                if (mLiftTimer != null) {
-                    mLiftTimer.reset();
-                }
-                break;
-            case R.id.btnCheck:
-                if (mQFragment != null) {
-                    mQFragment.check();
-                }
-                break;
-            case R.id.btnAnswer:
-                if (mQFragment != null) {
-                    mQFragment.showAnswer();
-                }
-                break;
-            case R.id.btnLogo:
-                showLogo();
-                break;
-
             default: // empty
         }
     }
@@ -224,6 +204,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mQFragment.showAnswer();
                     }
                     break;
+                case TIMER_START:
+                    if (mLiftTimer != null) {
+                        mLiftTimer.start();
+                    }
+                    break;
+                case TIMER_STOP:
+                    if (mLiftTimer != null) {
+                        mLiftTimer.pause();
+                    }
+                    break;
+                case TIMER_RESET:
+                    if (mLiftTimer != null) {
+                        mLiftTimer.reset();
+                    }
+                    break;
                 case STATUS:
                     if (mOnlineTv != null) {
                         String status = intent.getStringExtra(ApiService.EXTRA_CONTENT);
@@ -271,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .replace(container.getId(), fragment, "logo").commit();
         }
     }
+
 
     private void endGame() {
         Fragment fragment = LogoFragment.endGameInstance();

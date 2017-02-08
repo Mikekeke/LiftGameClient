@@ -4,18 +4,11 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.google.gson.Gson;
-
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import smartlift.ibesk.ru.smartliftclient.model.Question;
-import smartlift.ibesk.ru.smartliftclient.utils.JsonHolder;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -34,11 +27,11 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void testGson() throws JSONException {
-        Gson gson = new Gson();
-        JSONObject obj = new JSONObject(JsonHolder.JSON);
-        String s = obj.toString();
-        System.out.println(obj);
-        Question arr = gson.fromJson(JsonHolder.JSON, Question.class);
-        assertNotNull(arr);
+//        Gson gson = new Gson();
+//        JSONObject obj = new JSONObject(JsonHolder.JSON);
+//        String s = obj.toString();
+//        System.out.println(obj);
+//        Question arr = gson.fromJson(JsonHolder.JSON, Question.class);
+//        assertNotNull(arr);
     }
 }

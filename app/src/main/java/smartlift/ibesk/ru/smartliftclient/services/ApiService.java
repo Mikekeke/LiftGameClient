@@ -2,7 +2,6 @@ package smartlift.ibesk.ru.smartliftclient.services;
 
 import android.app.Activity;
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -19,8 +18,8 @@ import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.model.api.ApiRequest;
 import smartlift.ibesk.ru.smartliftclient.sockets.ImageSocket;
 
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.*;
-import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.*;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
 
 public class ApiService extends IntentService {
     public static final String EXTRA_METHOD = "ApiService.EXTRA_METHOD";
@@ -140,6 +139,10 @@ public class ApiService extends IntentService {
     public static void sendTelemetry(String message) {
         if (CONNECTION.isConnected())
             CONNECTION.sendTextMessage(message);
+    }
+    public static void goOffline() {
+        if (CONNECTION.isConnected())
+            CONNECTION.disconnect();
     }
 
     private void makeScreenshot() {
