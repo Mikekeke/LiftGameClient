@@ -21,6 +21,7 @@ import java.util.Map;
 
 import smartlift.ibesk.ru.smartliftclient.R;
 import smartlift.ibesk.ru.smartliftclient.model.Question;
+import smartlift.ibesk.ru.smartliftclient.services.ApiService;
 import smartlift.ibesk.ru.smartliftclient.views.BtnGroupUtil;
 
 public class QuestionFragment extends Fragment implements View.OnClickListener {
@@ -128,6 +129,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public void check() {
         boolean correct = mBtnGroup.handleCheck(mCorrectVar);
         Toast.makeText(getContext(), correct ? "Правильно!" : "Ошибка!", Toast.LENGTH_SHORT).show();
+        ApiService.sendTelemetry("check-" + (correct ? "Правильно!" : "Ошибка!"));
     }
 
     public void showAnswer() {

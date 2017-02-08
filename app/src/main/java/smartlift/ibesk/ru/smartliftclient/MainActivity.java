@@ -3,6 +3,7 @@ package smartlift.ibesk.ru.smartliftclient;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.*;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -60,13 +61,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mOnlineTv = (TextView) findViewById(R.id.onlineTv);
         mTimerPanel = (LinearLayout) findViewById(R.id.timer_panel);
         mTimerTv = (TimerTextView) findViewById(R.id.timerTv);
-        findViewById(R.id.btnLoadQuestion).setOnClickListener(this);
         findViewById(R.id.btnStartTimer).setOnClickListener(this);
         findViewById(R.id.btnPauseTimer).setOnClickListener(this);
         findViewById(R.id.btnResetTimer).setOnClickListener(this);
         findViewById(R.id.btnCheck).setOnClickListener(this);
         findViewById(R.id.btnAnswer).setOnClickListener(this);
-        findViewById(R.id.btnServer).setOnClickListener(this);
         findViewById(R.id.btnLogo).setOnClickListener(this);
         container = (FrameLayout) findViewById(R.id.fragment_container);
         mReceiver = new ApiReceiver();
@@ -147,9 +146,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnLoadQuestion:
-                startQuestion(JsonHolder.getQuestion());
-                break;
             case R.id.btnStartTimer:
                 if (mLiftTimer != null) {
                     mLiftTimer.start();
@@ -178,9 +174,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnLogo:
                 showLogo();
                 break;
-
-            case R.id.btnServer:
-                ApiService.start(this);
 
             default: // empty
         }
@@ -235,8 +228,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (mOnlineTv != null) {
                         String status = intent.getStringExtra(ApiService.EXTRA_CONTENT);
                         mOnlineTv.setText(status);
-                        if (Api.SOCKET.DOWN.equals(status))
+                        mOnlineTv.setTextColor(Color.GREEN);
+                        if (Api.SOCKET.DOWN.equals(status)){
+                            showLogo();
+                            mOnlineTv.setTextColor(Color.DKGRAY);
                             rescheduleConnection();
+                        }
                     }
                     break;
                 default: //empty
