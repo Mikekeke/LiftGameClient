@@ -5,7 +5,7 @@ package smartlift.ibesk.ru.smartliftclient.model.api;
  */
 public final class Api {
     public static final class SOCKET {
-        public static final String UP = "IN AIR";
+        public static final String UP = "ON AIR";
         public static final String DOWN = "OFFLINE";
     }
 
