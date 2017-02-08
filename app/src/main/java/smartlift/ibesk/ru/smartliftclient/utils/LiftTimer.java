@@ -1,6 +1,7 @@
 package smartlift.ibesk.ru.smartliftclient.utils;
 
 import android.os.CountDownTimer;
+import android.widget.ProgressBar;
 
 import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
@@ -9,6 +10,7 @@ public class LiftTimer {
     private long mTimeLeft;
     private TimerTextView mTv;
     private CountDownTimer mTimer;
+    private ProgressBar mBar;
 
     public interface TimeFinishListener {
         void onTimeFinish();
@@ -16,11 +18,13 @@ public class LiftTimer {
 
     private TimeFinishListener mFinishListener;
 
-    public LiftTimer(long timeLeft, TimerTextView tv, TimeFinishListener listener) {
+    public LiftTimer(int timeLeft, TimerTextView tv, TimeFinishListener listener, ProgressBar bar) {
         mInitialTime = timeLeft;
         mTimeLeft = timeLeft;
         mTv = tv;
         mFinishListener = listener;
+        mBar = bar;
+
     }
 
     public void start() {
@@ -30,6 +34,7 @@ public class LiftTimer {
             public void onTick(long left) {
                 mTv.setTimerText(left);
                 mTimeLeft = left;
+                mBar.setProgress((int) left);
             }
 
             @Override
@@ -39,6 +44,7 @@ public class LiftTimer {
                 if (mFinishListener != null) {
                     mFinishListener.onTimeFinish();
                 }
+                mBar.setProgress(0);
             }
         }.start();
     }

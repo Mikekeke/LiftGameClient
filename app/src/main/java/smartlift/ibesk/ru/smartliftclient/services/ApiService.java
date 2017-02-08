@@ -48,6 +48,7 @@ public class ApiService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        makeScreenshot();
 //        imgSocket();
 //        stringSocket();
         try {

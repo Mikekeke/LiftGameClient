@@ -7,4 +7,6 @@
     <color name="colorAccentDarker">#b79e50</color>
     <color name="colorClicked">#ff5640</color>
     <color name="colorLost">#ff0d00</color>
+    <color name="progress_start">#31ff49</color>
+    <color name="progress_end">#ff0d00</color>
 </resources>

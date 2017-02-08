@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import smartlift.ibesk.ru.smartliftclient.fragments.LogoFragment;
@@ -45,14 +46,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TimerTextView mTimerTv;
     private LinearLayout mTimerPanel;
-    private long TEST_TIME = 10 * 1000;
-    private long DEADLINE = 6 * 1000;
+    private int QUESTION_TIME = 10 * 1000;
+    private int DEADLINE = 6 * 1000;
     private LiftTimer mLiftTimer;
     private QuestionFragment mQFragment;
     private FrameLayout container;
     private BroadcastReceiver mReceiver;
     private TextView mOnlineTv;
     private SharedPreferences mPrefs;
+    private ProgressBar mBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTimerTv = (TimerTextView) findViewById(R.id.timerTv);
         container = (FrameLayout) findViewById(R.id.fragment_container);
         mReceiver = new ApiReceiver();
+        mBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
         EditText etTimeRed = (EditText) findViewById(R.id.timerRedEt);
@@ -93,12 +96,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         //Timer stuff
-        DEADLINE = (Long.parseLong((etTimeRed).getText().toString()) + 1) * 1000;
-        TEST_TIME = (Long.parseLong((etTime).getText().toString())) * 1000;
+        DEADLINE = (Integer.parseInt((etTimeRed).getText().toString()) + 1) * 1000;
+        QUESTION_TIME = (Integer.parseInt((etTime).getText().toString())) * 1000;
+        mBar.setMax(QUESTION_TIME);
+        mBar.setProgress(QUESTION_TIME);
 
-        mTimerTv.setTimerText(TEST_TIME);
+        mTimerTv.setTimerText(QUESTION_TIME);
         mTimerTv.setDeadline(DEADLINE);
-        mLiftTimer = new LiftTimer(TEST_TIME, mTimerTv, this);
+        mLiftTimer = new LiftTimer(QUESTION_TIME, mTimerTv, this, mBar);
 
         showLogo();
 
@@ -112,16 +117,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void testInitTimer() {
-        DEADLINE = (Long.parseLong(
+        DEADLINE = (Integer.parseInt(
                 ((TextView) findViewById(R.id.timerRedEt)).getText().toString()
         ) + 1) * 1000;
-        TEST_TIME = (Long.parseLong(
+        QUESTION_TIME = (Integer.parseInt(
                 ((TextView) findViewById(R.id.timerTimeEt)).getText().toString()
         )) * 1000;
 
-        mTimerTv.setTimerText(TEST_TIME);
+        mTimerTv.setTimerText(QUESTION_TIME);
         mTimerTv.setDeadline(DEADLINE);
-        mLiftTimer = new LiftTimer(TEST_TIME, mTimerTv, this);
+        mLiftTimer = new LiftTimer(QUESTION_TIME, mTimerTv, this, mBar);
     }
 
     @Override
