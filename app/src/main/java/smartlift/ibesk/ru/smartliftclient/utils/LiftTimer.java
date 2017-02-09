@@ -53,7 +53,7 @@ public class LiftTimer {
     }
 
     public void pause() {
-        ApiService.sendTelemetry("timer-Стоп");
+//        ApiService.sendTelemetry("timer-" + mTimeLeft);
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;

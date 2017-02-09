@@ -137,7 +137,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             mAnswertV.setVisibility(
                     mAnswertV.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             ApiService.sendTelemetry(
-                    "answer-" +  (mAnswertV.getVisibility() == View.GONE ? "Свёрнут" : "Развёрнут"));
+                    "answer-" +  (mAnswertV.getVisibility() == View.GONE ? "closed" : "open"));
         }
     }
 
