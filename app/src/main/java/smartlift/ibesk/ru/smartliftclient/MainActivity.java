@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mLiftTimer != null) {
             mLiftTimer.start();
         }
+        ApiService.sendTelemetry("question");
     }
 
     @Override
@@ -270,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction()
                     .replace(container.getId(), fragment, "logo").commit();
         }
+        ApiService.sendTelemetry("logo");
     }
 
 
@@ -277,5 +279,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment fragment = LogoFragment.endGameInstance();
         getSupportFragmentManager().beginTransaction().disallowAddToBackStack()
                 .replace(container.getId(), fragment).commitAllowingStateLoss();
+        ApiService.sendTelemetry("logo");
     }
 }
