@@ -37,6 +37,7 @@ import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.PICK_VARIA
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.QUESTION;
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_RESET;
+import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_SET;
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_START;
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_STOP;
 
@@ -235,8 +236,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case TIMER_RESET:
                     if (mLiftTimer != null) {
                         mLiftTimer.reset();
+                        mBar.setProgress(DEADLINE * 1000);
                     }
                     break;
+                case TIMER_SET:
+                    String s = intent.getStringExtra(ApiService.EXTRA_CONTENT);
+                    Log.d("qq", "onReceive: " + s);
+                    break;
+
                 case STATUS:
                     if (mOnlineTv != null) {
                         String status = intent.getStringExtra(ApiService.EXTRA_CONTENT);

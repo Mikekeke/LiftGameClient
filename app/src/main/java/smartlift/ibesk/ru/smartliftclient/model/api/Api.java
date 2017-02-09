@@ -17,6 +17,7 @@ public final class Api {
         public static final String EXPAND_ANSWER = "expand_answer";
         public static final String SCREENSHOT = "screenshot";
         public static final String STATUS = "status";
+        public static final String TIMER_SET = "TIMER_SET";
         public static final String TIMER_START = "TIMER_START";
         public static final String TIMER_STOP = "TIMER_STOP";
         public static final String TIMER_RESET = "TIMER_RESET";
