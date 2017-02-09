@@ -2,7 +2,6 @@ package smartlift.ibesk.ru.smartliftclient.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -42,7 +41,9 @@ public class BtnGroupUtil {
 
     public void handleColoring(int id) {
         if (mCurrentClickedId != -1) {
-            mButtonsMap.get(mCurrentClickedId).setBackground(mDefBg);
+            for (Button button : mButtonsMap.values()) {
+                button.setBackground(mDefBg);
+            }
         }
         mCurrentClickedId = id;
         mButtonsMap.get(mCurrentClickedId).setBackground(mPressedBg);

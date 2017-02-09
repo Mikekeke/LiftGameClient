@@ -3,6 +3,7 @@ package smartlift.ibesk.ru.smartliftclient.utils;
 import android.os.CountDownTimer;
 import android.widget.ProgressBar;
 
+import smartlift.ibesk.ru.smartliftclient.services.ApiService;
 import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
 public class LiftTimer {
@@ -28,11 +29,13 @@ public class LiftTimer {
     }
 
     public void start() {
+//        ApiService.sendTelemetry("timer-Идёт");
         if (mTimer != null) return;
         mTimer = new CountDownTimer(mTimeLeft, 1000) {
             @Override
             public void onTick(long left) {
                 mTv.setTimerText(left);
+                ApiService.sendTelemetry("timer-" + mTv.getText());
                 mTimeLeft = left;
                 mBar.setProgress((int) left);
             }
@@ -50,6 +53,7 @@ public class LiftTimer {
     }
 
     public void pause() {
+        ApiService.sendTelemetry("timer-Стоп");
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;

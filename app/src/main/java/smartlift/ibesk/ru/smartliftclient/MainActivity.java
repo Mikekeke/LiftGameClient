@@ -134,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         // Start socket service
         ApiService.start(this);
+        if (mLiftTimer != null) {
+            mLiftTimer.start();
+        }
         if (mReceiver != null) {
             LocalBroadcastManager.getInstance(this)
                     .registerReceiver(mReceiver, new IntentFilter(API_ACTION));
@@ -143,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        if (mLiftTimer != null) {
+            mLiftTimer.pause();
+        }
         ApiService.goOffline();
         if (mReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
@@ -153,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mTimerPanel.getVisibility() == View.GONE) mTimerPanel.setVisibility(View.VISIBLE);
         insertQuestionFragment(question);
         if (mLiftTimer != null) {
+            mLiftTimer.reset();
             mLiftTimer.start();
         }
         ApiService.sendTelemetry("question");
@@ -197,7 +204,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startQuestion(intent.getStringExtra(ApiService.EXTRA_CONTENT));
                     break;
                 case CHECK:
-                    if (mQFragment != null) mQFragment.check();
+                    if (mQFragment != null) {
+                        if (mLiftTimer != null) {
+                            mLiftTimer.pause();
+                        }
+                        mQFragment.check();
+                    }
                     break;
                 case LOGO:
                     showLogo();
@@ -271,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction()
                     .replace(container.getId(), fragment, "logo").commit();
         }
-        ApiService.sendTelemetry("logo");
+        ApiService.sendTelemetry("logo-ЛОГОТИП");
     }
 
 
@@ -279,6 +291,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment fragment = LogoFragment.endGameInstance();
         getSupportFragmentManager().beginTransaction().disallowAddToBackStack()
                 .replace(container.getId(), fragment).commitAllowingStateLoss();
-        ApiService.sendTelemetry("logo");
+        ApiService.sendTelemetry("logo-ЛОГОТИП - ВРЕМЯ ВЫШЛО!");
     }
 }
