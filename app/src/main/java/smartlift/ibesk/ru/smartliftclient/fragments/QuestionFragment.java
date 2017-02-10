@@ -70,7 +70,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_question, container, false);
         if (mQuestion != null) {
-            TextView qTextTv = (TextView) v.findViewById(R.id.q_text);
+            TextView qTextTv = (TextView) v.findViewById(R.id.question_text);
             Typeface robotoTypeface =
                     Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Condensed.ttf");
             qTextTv.setTypeface(robotoTypeface);

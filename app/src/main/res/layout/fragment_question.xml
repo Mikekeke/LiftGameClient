@@ -1,96 +1,123 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                tools:context="smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:weightSum="12"
+              tools:context="smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment">
 
-    <TextView
-        android:id="@+id/q_name"
+    <RelativeLayout
+        android:id="@+id/question_body"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="15dp"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        tools:text="Question name"
-        android:textAlignment="center"
-        android:visibility="gone"/>
+        android:layout_height="0dp"
+        android:layout_weight="5">
 
-    <TextView
-        android:id="@+id/q_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/q_name"
-        android:layout_marginBottom="30dp"
-        android:textSize="30sp"
-        tools:text="Question text text text text text" 
-        android:textAlignment="center"/>
+        <ImageView
+            android:id="@+id/quest_body_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/question_body"/>
+
+        <TextView
+            android:id="@+id/question_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAlignment="gravity"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginBottom="30dp"
+            android:textSize="55sp"
+            android:layout_alignBottom="@id/quest_body_bg"
+            android:layout_alignLeft="@id/quest_body_bg"
+            android:layout_alignRight="@id/quest_body_bg"
+            android:layout_alignTop="@id/quest_body_bg"
+            android:textColor="@android:color/white"
+            tools:text="Question text text text text text"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/q_answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/q_text"
         android:layout_marginBottom="30dp"
-        android:textSize="24sp"
-        android:textStyle="italic"
-        android:textAlignment="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
         android:background="@drawable/answer_bg"
-        tools:text="Question text text text text text"
-        android:visibility="gone"/>
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        android:visibility="gone"
+        tools:text="Question text text text text text"/>
 
-    <!--buttons-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/q_answer"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:layout_weight="7"
+        android:layout_height="0dp">
 
+        <ImageView
+            android:id="@+id/buttons_bg_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/buttons_block"/>
+
+        <!--buttons-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center"
+            android:layout_alignBottom="@id/buttons_bg_img"
+            android:layout_alignLeft="@id/buttons_bg_img"
+            android:layout_alignRight="@id/buttons_bg_img"
+            android:layout_alignTop="@id/buttons_bg_img">
 
-            <Button
-                android:id="@+id/v_1"
-                style="@style/VariantButtonStyle"
-                tools:text="variant one text"
-                android:textAllCaps="false"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
 
-            <Button
-                android:id="@+id/v_2"
-                style="@style/VariantButtonStyle"
-                tools:text="variant two text"
-                android:textAllCaps="false"/>
+                <Button
+                    android:id="@+id/v_1"
+                    style="@style/VariantButtonStyle"
+                    android:textAllCaps="false"
+                    tools:text="variant one text"/>
+
+                <Button
+                    android:id="@+id/v_2"
+                    style="@style/VariantButtonStyle"
+                    android:textAllCaps="false"
+                    tools:text="variant two text"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/v_3"
+                    style="@style/VariantButtonStyle"
+                    android:textAllCaps="false"
+                    tools:text="variant three text"/>
+
+                <Button
+                    android:id="@+id/v_4"
+                    style="@style/VariantButtonStyle"
+                    android:textAllCaps="false"
+                    tools:text="variant four text"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <Button
-                android:id="@+id/v_3"
-                style="@style/VariantButtonStyle"
-                tools:text="variant three text"
-                android:textAllCaps="false"/>
-
-            <Button
-                android:id="@+id/v_4"
-                style="@style/VariantButtonStyle"
-                tools:text="variant four text"
-                android:textAllCaps="false"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

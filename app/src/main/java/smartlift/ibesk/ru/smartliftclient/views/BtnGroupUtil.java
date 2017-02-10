@@ -34,9 +34,9 @@ public class BtnGroupUtil {
         }
         mDefBg = buttons.get(1).getBackground();
         mContext = context;
-        mPressedBg = ContextCompat.getDrawable(mContext, R.drawable.bg_pressed_btn);
-        mCorrectBg = ContextCompat.getDrawable(mContext, R.drawable.bg_correct_button);
-        mWrongBg = ContextCompat.getDrawable(mContext, R.drawable.bg_wrong_button);
+        mPressedBg = ContextCompat.getDrawable(mContext, R.drawable.b_select);
+        mCorrectBg = ContextCompat.getDrawable(mContext, R.drawable.b_right);
+        mWrongBg = ContextCompat.getDrawable(mContext, R.drawable.b_error);
     }
 
     public void handleColoring(int id) {

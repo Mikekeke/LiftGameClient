@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/btn_default_normal" 
+    <item android:drawable="@drawable/b_normal"
           android:state_enabled="true" 
           android:state_window_focused="false" />
     
-    <item android:drawable="@drawable/btn_default_disabled" 
+    <item android:drawable="@drawable/b_normal"
           android:state_enabled="false"
           android:state_window_focused="false" />
     
-    <item android:drawable="@drawable/btn_default_pressed"
+    <item android:drawable="@drawable/b_select"
           android:state_pressed="true" />
     
-    <item android:drawable="@drawable/btn_default_focused"
+    <item android:drawable="@drawable/b_normal"
           android:state_enabled="true"
           android:state_focused="true" />
     
-    <item android:drawable="@drawable/btn_default_normal"
+    <item android:drawable="@drawable/b_normal"
           android:state_enabled="true" />
     
-    <item android:drawable="@drawable/btn_default_disabled_focused"
+    <item android:drawable="@drawable/b_normal"
           android:state_focused="true" />
     
-    <item android:drawable="@drawable/btn_default_disabled" />
+    <item android:drawable="@drawable/b_normal" />
 </selector>

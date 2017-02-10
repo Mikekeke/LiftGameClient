@@ -9,4 +9,10 @@
     <color name="colorLost">#ff0d00</color>
     <color name="progress_start">#31ff49</color>
     <color name="progress_end">#ff0d00</color>
+
+    <!--button colors-->
+    <color name="btn_default">#ff0d00</color>
+    <color name="btn_pressed">#ff0d00</color>
+    <color name="btn_correct">#ff0d00</color>
+    <color name="btn_wrong">#ff0d00</color>
 </resources>

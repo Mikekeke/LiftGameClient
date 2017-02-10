@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLiftTimer = new LiftTimer(QUESTION_TIME, this, mBar);
 
         showLogo();
+        // TODO: 10-Feb-17 testing!
+//        String q = "{\"number\":1,\"name\":\"Вопрос 12\",\"question\":\"Как вы думаете, что нужно сделать космонавту, перед тем как лечь спать в космосе?\",\"correctVar\":2,\"answer\":\"Ответ на впорос 2\",\"status\":\"не задан\",\"img1\":\"\",\"img2\":\"\",\"variants\":{\"1\":\"22\",\"2\":\"вариант 2\",\"3\":\"вариант3\",\"4\":\"вариант 4\"}}";
+//        startQuestion(q);
     }
 
 
@@ -120,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showLogo() {
-//        mTimerPanel.setVisibility(View.GONE);
         mTimerPanel.animate()
                 .translationY(mTimerPanel.getHeight());
 
@@ -137,11 +139,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startQuestion(String question) {
-//        mTimerPanel.setVisibility(View.VISIBLE);
         mTimerPanel.setAlpha(1.0f);
         mTimerPanel.animate()
                 .translationY(0);
-        insertQuestionFragment(question);
+                insertQuestionFragment(question);
+
+        // TODO: 10-Feb-17 PUT BACK!
         if (mLiftTimer != null) {
             mLiftTimer.reset();
             mLiftTimer.start();

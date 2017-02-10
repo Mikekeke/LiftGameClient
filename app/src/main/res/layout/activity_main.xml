@@ -5,51 +5,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="smartlift.ibesk.ru.smartliftclient.MainActivity"
     android:background="@color/colorPrimaryLight">
 
-    <!--testing panel-->
-    <LinearLayout
-        android:id="@+id/test_panel"
+    <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true">
+        <ImageView
+            android:id="@+id/header_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/question_header"
+            android:scaleType="fitXY"/>
 
         <TextView
             android:id="@+id/onlineTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="viewEnd"
+            android:layout_marginRight="10dp"
             android:text="OFFLINE"
             android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:textStyle="bold"
+            android:layout_alignLeft="@id/header_img"
+            android:layout_alignTop="@id/header_img"
+            android:layout_alignRight="@id/header_img"
+            android:layout_alignBottom="@id/header_img"/>
+    </RelativeLayout>
+
+    <!--Fragment container-->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header"
+        android:layout_alignParentBottom="true">
+    </FrameLayout>
 
     <!--Timer panel-->
     <LinearLayout
         android:id="@+id/timer_panel"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:visibility="visible"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         android:background="@android:color/transparent"
-        android:layout_marginTop="5dp"
-        >
+        android:layout_alignParentBottom="true">
+
+
+
         <ProgressBar
+            android:id="@+id/progressBar"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:progressDrawable="@drawable/progress"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
-            android:id="@+id/progressBar"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:minHeight="30dip"
@@ -58,13 +75,5 @@
             android:indeterminate="false"/>
     </LinearLayout>
 
-    <!--Fragment container-->
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/timer_panel"
-        android:layout_below="@id/test_panel">
 
-    </FrameLayout>
 </RelativeLayout>

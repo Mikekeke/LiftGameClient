@@ -6,8 +6,8 @@
 
     <ImageView
             android:id="@+id/myImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
             android:adjustViewBounds="true"
             android:layout_centerInParent="true"
             android:src="@drawable/logo" />

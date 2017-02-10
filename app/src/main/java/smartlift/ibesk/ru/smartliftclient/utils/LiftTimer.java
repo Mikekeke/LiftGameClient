@@ -31,7 +31,7 @@ public class LiftTimer {
         mTimer = new CountDownTimer(mTimeLeft, 1000) {
             @Override
             public void onTick(long left) {
-                ApiService.sendTelemetry("timer-" + left);
+                ApiService.sendTelemetry("timer-" + (left / 1000));
                 mTimeLeft = left;
                 mBar.setProgress((int) left);
             }
