@@ -30,36 +30,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            android:src="@drawable/big_body"/>
-        <TextView
-            android:id="@+id/txt_logo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="ЛОГОТИП"
-            android:textSize="50sp"
-            android:textColor="@android:color/white"
-            android:layout_alignBottom="@id/logo_body_image"
-            android:layout_alignLeft="@id/logo_body_image"
-            android:layout_alignRight="@id/logo_body_image"
-            android:layout_alignTop="@id/logo_body_image"/>
+            android:src="@drawable/logo"/>
 
-        <TextView
-            android:id="@+id/endgame_text"
-            android:layout_marginTop="20dp"
-            android:layout_above="@id/txt_logo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="1dp"
-            android:gravity="center"
-            android:text="\u263B ! ВРЕМЯ ВЫШЛО ! \u263B"
-            android:textStyle="bold"
-            android:textSize="90sp"
-            android:textColor="@color/colorLost"
-            android:visibility="gone"/>
-
+        <!--<TextView-->
+            <!--android:id="@+id/endgame_text"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_margin="1dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="\u263B ! ВРЕМЯ ВЫШЛО ! \u263B"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textSize="90sp"-->
+            <!--android:textColor="@color/colorLost"-->
+            <!--android:visibility="gone"/>-->
     </RelativeLayout>
-
-
-
 </RelativeLayout>

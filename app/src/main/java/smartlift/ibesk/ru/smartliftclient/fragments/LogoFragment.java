@@ -1,7 +1,6 @@
 package smartlift.ibesk.ru.smartliftclient.fragments;
 
 
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,7 +47,7 @@ public class LogoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_logo, container, false);
-        v.findViewById(R.id.endgame_text).setVisibility(mEndGame ? View.VISIBLE : View.GONE);
+//        v.findViewById(R.id.endgame_text).setVisibility(mEndGame ? View.VISIBLE : View.GONE);
         return v;
     }
 
