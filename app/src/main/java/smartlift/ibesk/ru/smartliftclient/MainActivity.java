@@ -14,9 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -27,7 +25,6 @@ import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
 import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
-import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.CHECK;
@@ -45,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         QuestionFragment.AnswerListener, LiftTimer.TimeFinishListener {
 
 
-    private TimerTextView mTimerTv;
     private LinearLayout mTimerPanel;
     private int QUESTION_TIME = 10 * 1000;
     private int DEADLINE = 6 * 1000;
@@ -63,53 +59,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String url = mPrefs.getString(ApiService.WS_URL, "");
-        if (url.isEmpty()){
+        if (url.isEmpty()) {
             startActivity(new Intent(this, StartActivity.class));
             return;
         }
 
 
-
         // GUI
         mOnlineTv = (TextView) findViewById(R.id.onlineTv);
         mTimerPanel = (LinearLayout) findViewById(R.id.timer_panel);
-        mTimerTv = (TimerTextView) findViewById(R.id.timerTv);
+        mTimerPanel.setAlpha(0.0f);
         container = (FrameLayout) findViewById(R.id.fragment_container);
         mReceiver = new ApiReceiver();
         mBar = (ProgressBar) findViewById(R.id.progressBar);
 
-
-        EditText etTimeRed = (EditText) findViewById(R.id.timerRedEt);
-        etTimeRed.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                testInitTimer();
-                return false;
-            }
-        });
-        EditText etTime = (EditText) findViewById(R.id.timerTimeEt);
-        etTime.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                testInitTimer();
-                return false;
-            }
-        });
-
         //Timer stuff
-        DEADLINE = (Integer.parseInt((etTimeRed).getText().toString()) + 1) * 1000;
-        QUESTION_TIME = (Integer.parseInt((etTime).getText().toString())) * 1000;
+        DEADLINE = 11 * 1000;
+        QUESTION_TIME = 60 * 1000;
         mBar.setMax(QUESTION_TIME);
         mBar.setProgress(QUESTION_TIME);
-
-        mTimerTv.setTimerText(QUESTION_TIME);
-        mTimerTv.setDeadline(DEADLINE);
-        mLiftTimer = new LiftTimer(QUESTION_TIME, mTimerTv, this, mBar);
+        mLiftTimer = new LiftTimer(QUESTION_TIME, this, mBar);
 
         showLogo();
-
     }
 
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            mTimerPanel.animate()
+                    .translationY(mTimerPanel.getHeight());
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -117,27 +99,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void testInitTimer() {
-        DEADLINE = (Integer.parseInt(
-                ((TextView) findViewById(R.id.timerRedEt)).getText().toString()
-        ) + 1) * 1000;
-        QUESTION_TIME = (Integer.parseInt(
-                ((TextView) findViewById(R.id.timerTimeEt)).getText().toString()
-        )) * 1000;
-
-        mTimerTv.setTimerText(QUESTION_TIME);
-        mTimerTv.setDeadline(DEADLINE);
-        mLiftTimer = new LiftTimer(QUESTION_TIME, mTimerTv, this, mBar);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         // Start socket service
         ApiService.start(this);
-        if (mLiftTimer != null) {
-            mLiftTimer.start();
-        }
         if (mReceiver != null) {
             LocalBroadcastManager.getInstance(this)
                     .registerReceiver(mReceiver, new IntentFilter(API_ACTION));
@@ -147,17 +113,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        if (mLiftTimer != null) {
-            mLiftTimer.pause();
-        }
         ApiService.goOffline();
         if (mReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         }
     }
 
+    private void showLogo() {
+//        mTimerPanel.setVisibility(View.GONE);
+        mTimerPanel.animate()
+                .translationY(mTimerPanel.getHeight());
+
+        if (mLiftTimer != null) {
+            mLiftTimer.pause();
+        }
+        Fragment fragment = LogoFragment.newInstance();
+        if (getSupportFragmentManager().findFragmentByTag("logo") == null) {
+            Log.d("qq", "showLogo: ");
+            getSupportFragmentManager().beginTransaction()
+                    .replace(container.getId(), fragment, "logo").commit();
+        }
+        ApiService.sendTelemetry("logo-ЛОГОТИП");
+    }
+
     private void startQuestion(String question) {
-        if (mTimerPanel.getVisibility() == View.GONE) mTimerPanel.setVisibility(View.VISIBLE);
+//        mTimerPanel.setVisibility(View.VISIBLE);
+        mTimerPanel.setAlpha(1.0f);
+        mTimerPanel.animate()
+                .translationY(0);
         insertQuestionFragment(question);
         if (mLiftTimer != null) {
             mLiftTimer.reset();
@@ -249,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String status = intent.getStringExtra(ApiService.EXTRA_CONTENT);
                         mOnlineTv.setText(status);
                         mOnlineTv.setTextColor(Color.GREEN);
-                        if (Api.SOCKET.DOWN.equals(status)){
+                        if (Api.SOCKET.DOWN.equals(status)) {
                             showLogo();
                             mOnlineTv.setTextColor(Color.DKGRAY);
                             rescheduleConnection();
@@ -278,19 +261,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (NumberFormatException e) {
             Log.e("qq", "forcePickVariant: ", e);
         }
-    }
-
-    private void showLogo() {
-        if (mLiftTimer != null) {
-            mLiftTimer.pause();
-        }
-        Fragment fragment = LogoFragment.newInstance();
-        if (getSupportFragmentManager().findFragmentByTag("logo") == null) {
-            Log.d("qq", "showLogo: ");
-            getSupportFragmentManager().beginTransaction()
-                    .replace(container.getId(), fragment, "logo").commit();
-        }
-        ApiService.sendTelemetry("logo-ЛОГОТИП");
     }
 
 

@@ -4,12 +4,10 @@ import android.os.CountDownTimer;
 import android.widget.ProgressBar;
 
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
-import smartlift.ibesk.ru.smartliftclient.views.TimerTextView;
 
 public class LiftTimer {
     private final long mInitialTime;
     private long mTimeLeft;
-    private TimerTextView mTv;
     private CountDownTimer mTimer;
     private ProgressBar mBar;
 
@@ -19,10 +17,9 @@ public class LiftTimer {
 
     private TimeFinishListener mFinishListener;
 
-    public LiftTimer(int timeLeft, TimerTextView tv, TimeFinishListener listener, ProgressBar bar) {
+    public LiftTimer(int timeLeft,TimeFinishListener listener, ProgressBar bar) {
         mInitialTime = timeLeft;
         mTimeLeft = timeLeft;
-        mTv = tv;
         mFinishListener = listener;
         mBar = bar;
 
@@ -34,15 +31,13 @@ public class LiftTimer {
         mTimer = new CountDownTimer(mTimeLeft, 1000) {
             @Override
             public void onTick(long left) {
-                mTv.setTimerText(left);
-                ApiService.sendTelemetry("timer-" + mTv.getText());
+                ApiService.sendTelemetry("timer-" + left);
                 mTimeLeft = left;
                 mBar.setProgress((int) left);
             }
 
             @Override
             public void onFinish() {
-                mTv.finish();
                 mTimeLeft = 0;
                 if (mFinishListener != null) {
                     mFinishListener.onTimeFinish();
@@ -63,7 +58,6 @@ public class LiftTimer {
     public void reset() {
         pause();
         mTimeLeft = mInitialTime;
-        mTv.setTimerText(mTimeLeft);
-        mTv.reset();
+        mBar.setProgress((int) mTimeLeft);
     }
 }

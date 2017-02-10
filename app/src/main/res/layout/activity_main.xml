@@ -39,23 +39,9 @@
         android:visibility="visible"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:background="@color/colorPrimary"
+        android:background="@android:color/transparent"
         android:layout_marginTop="5dp"
         >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="100dp"
-            android:text="Timer:"
-            android:textSize="30sp" />
-
-        <smartlift.ibesk.ru.smartliftclient.views.TimerTextView
-            android:id="@+id/timerTv"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:textSize="30sp" />
-
         <ProgressBar
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:progressDrawable="@drawable/progress"
@@ -67,26 +53,9 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:minHeight="30dip"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
             android:indeterminate="false"/>
-
-        <EditText
-            android:id="@+id/timerTimeEt"
-            android:layout_width="60sp"
-            android:text="60"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:textSize="20sp"
-            android:visibility="gone"/>
-
-        <EditText
-            android:id="@+id/timerRedEt"
-            android:layout_width="60sp"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:text="10"
-            android:textSize="20sp"
-            android:visibility="gone"
-            />
     </LinearLayout>
 
     <!--Fragment container-->
