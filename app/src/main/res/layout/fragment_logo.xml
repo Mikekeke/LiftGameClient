@@ -4,23 +4,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-    <!--<ImageView-->
-            <!--android:id="@+id/myImageView"-->
-            <!--android:layout_width="500dp"-->
-            <!--android:layout_height="500dp"-->
-            <!--android:adjustViewBounds="true"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:src="@drawable/logo" />-->
-    <TextView
+    <!--FOOTER-->
+    <RelativeLayout
+        android:id="@+id/logo_footer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/footer_image"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/logo_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="ЛОГОТИП"
-        android:textSize="50sp"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_above="@id/logo_footer">
+        <ImageView
+            android:id="@+id/logo_body_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/big_body"/>
+        <TextView
+            android:id="@+id/txt_logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="ЛОГОТИП"
+            android:textSize="50sp"
+            android:textColor="@android:color/white"
+            android:layout_alignBottom="@id/logo_body_image"
+            android:layout_alignLeft="@id/logo_body_image"
+            android:layout_alignRight="@id/logo_body_image"
+            android:layout_alignTop="@id/logo_body_image"/>
 
-    <TextView
+        <TextView
             android:id="@+id/endgame_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_above="@id/txt_logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_margin="1dp"
             android:gravity="center"
             android:text="\u263B ! ВРЕМЯ ВЫШЛО ! \u263B"
@@ -28,5 +57,9 @@
             android:textSize="90sp"
             android:textColor="@color/colorLost"
             android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

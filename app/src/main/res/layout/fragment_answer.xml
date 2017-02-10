@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context="smartlift.ibesk.ru.smartliftclient.fragments.AnswerFragment">
+
+    <RelativeLayout
+        android:id="@+id/answer_body_rel"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/answer_footer">
+        <ImageView
+            android:id="@+id/answer_body_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/big_body"/>
+        <TextView
+            android:id="@+id/answer_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/hello_blank_fragment"
+            android:textSize="50sp"
+            android:paddingTop="40dp"
+            android:paddingBottom="40dp"
+            android:paddingLeft="70dp"
+            android:paddingRight="70dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_alignBottom="@id/answer_body_image"
+            android:layout_alignLeft="@id/answer_body_image"
+            android:layout_alignRight="@id/answer_body_image"
+            android:layout_alignTop="@id/answer_body_image"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/answer_footer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/footer_image"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

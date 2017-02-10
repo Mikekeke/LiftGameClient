@@ -1,6 +1,7 @@
 package smartlift.ibesk.ru.smartliftclient.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -137,11 +138,14 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     }
 
     public void showAnswer() {
-        if (mAnswertV != null) {
-            mAnswertV.setVisibility(
-                    mAnswertV.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+        Activity activity = getActivity();
+        if (activity != null) {
+            Fragment answerFragment = AnswerFragment
+                    .newInstance(mQuestion != null ? mQuestion.getAnswer() : "");
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, answerFragment, "answer").commit();
             ApiService.sendTelemetry(
-                    "answer-" +  (mAnswertV.getVisibility() == View.GONE ? "closed" : "open"));
+                    "answer-open");
         }
     }
 

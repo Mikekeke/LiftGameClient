@@ -6,13 +6,9 @@
     <color name="colorAccent">#ffc98c</color>
     <color name="colorAccentDarker">#b79e50</color>
     <color name="colorClicked">#ff5640</color>
-    <color name="colorLost">#ff0d00</color>
+    <color name="colorLost">#ff4c42</color>
     <color name="progress_start">#31ff49</color>
     <color name="progress_end">#ff0d00</color>
+    <color name="online">#54ccf4</color>
 
-    <!--button colors-->
-    <color name="btn_default">#ff0d00</color>
-    <color name="btn_pressed">#ff0d00</color>
-    <color name="btn_correct">#ff0d00</color>
-    <color name="btn_wrong">#ff0d00</color>
 </resources>

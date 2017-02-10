@@ -25,11 +25,15 @@
             android:id="@+id/onlineTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="viewEnd"
-            android:layout_marginRight="10dp"
+            android:gravity="end"
             android:text="OFFLINE"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:textSize="20sp"
             android:textStyle="bold"
+
             android:layout_alignLeft="@id/header_img"
             android:layout_alignTop="@id/header_img"
             android:layout_alignRight="@id/header_img"
@@ -49,7 +53,7 @@
     <LinearLayout
         android:id="@+id/timer_panel"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:visibility="visible"
         android:descendantFocusability="beforeDescendants"
@@ -57,13 +61,11 @@
         android:background="@android:color/transparent"
         android:layout_alignParentBottom="true">
 
-
-
         <ProgressBar
             android:id="@+id/progressBar"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:progressDrawable="@drawable/progress"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
@@ -74,6 +76,4 @@
             android:layout_marginLeft="20dp"
             android:indeterminate="false"/>
     </LinearLayout>
-
-
 </RelativeLayout>

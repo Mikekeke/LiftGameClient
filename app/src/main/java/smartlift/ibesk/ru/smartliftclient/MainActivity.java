@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -123,8 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showLogo() {
-        mTimerPanel.animate()
-                .translationY(mTimerPanel.getHeight());
+
 
         if (mLiftTimer != null) {
             mLiftTimer.pause();
@@ -205,9 +205,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     forcePickVariant(intent.getStringExtra(ApiService.EXTRA_CONTENT));
                     break;
                 case EXPAND_ANSWER:
-                    if (mQFragment != null) {
-                        mQFragment.showAnswer();
-                    }
+                    showAnswer();
+
                     break;
                 case TIMER_START:
                     if (mLiftTimer != null) {
@@ -234,16 +233,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (mOnlineTv != null) {
                         String status = intent.getStringExtra(ApiService.EXTRA_CONTENT);
                         mOnlineTv.setText(status);
-                        mOnlineTv.setTextColor(Color.GREEN);
+                        mOnlineTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.online));
                         if (Api.SOCKET.DOWN.equals(status)) {
                             showLogo();
-                            mOnlineTv.setTextColor(Color.DKGRAY);
+                            mOnlineTv.setTextColor(Color.LTGRAY);
                             rescheduleConnection();
                         }
                     }
                     break;
                 default: //empty
             }
+        }
+    }
+
+    private void showAnswer() {
+        mTimerPanel.animate()
+                .translationY(mTimerPanel.getHeight());
+        if (mQFragment != null) {
+            mQFragment.showAnswer();
         }
     }
 
