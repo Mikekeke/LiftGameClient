@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-
         // GUI
         mOnlineTv = (TextView) findViewById(R.id.onlineTv);
         mTimerPanel = (LinearLayout) findViewById(R.id.timer_panel);
@@ -124,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showLogo() {
-
-
+        mTimerPanel.animate()
+                .translationY(mTimerPanel.getHeight());
         if (mLiftTimer != null) {
             mLiftTimer.pause();
         }
@@ -247,6 +246,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showAnswer() {
+        if (mLiftTimer != null) {
+            mLiftTimer.pause();
+        }
         mTimerPanel.animate()
                 .translationY(mTimerPanel.getHeight());
         if (mQFragment != null) {
@@ -272,7 +274,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.e("qq", "forcePickVariant: ", e);
         }
     }
-
 
     private void endGame() {
         Fragment fragment = LogoFragment.endGameInstance();

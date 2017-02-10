@@ -58,8 +58,10 @@ public class BtnGroupUtil {
     }
 
     public boolean handleCheck(int correctVar) {
-        if (mCurrentClickedId == -1) return false;
-        if (mCurrentClickedId == mVarId2BtnId.get(correctVar)) {
+        if (mCurrentClickedId == -1) {
+            mButtonsMap.get(mVarId2BtnId.get(correctVar)).setBackground(mCorrectBg);
+            return false;
+        } else if (mCurrentClickedId == mVarId2BtnId.get(correctVar)) {
             mButtonsMap.get(mCurrentClickedId).setBackground(mCorrectBg);
             return true;
         } else {
