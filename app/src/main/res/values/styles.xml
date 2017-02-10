@@ -14,7 +14,7 @@
     <style name="VariantButtonStyle">
         <item name="android:textSize">35sp</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:layout_height">170dp</item>
+        <item name="android:layout_height">140dp</item>
         <item name="android:layout_width">350dp</item>
         <item name="android:layout_marginLeft">30dp</item>
         <item name="android:layout_marginRight">30dp</item>
