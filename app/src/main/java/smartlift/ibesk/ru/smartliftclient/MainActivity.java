@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onTimeFinish() {
         Log.d("qq", "onTimeFinish: ");
-        endGame();
+//        endGame();
     }
 
     private class ApiReceiver extends BroadcastReceiver {
