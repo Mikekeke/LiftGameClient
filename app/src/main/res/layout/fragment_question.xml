@@ -37,22 +37,6 @@
             tools:text="Question text text text text text"/>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/q_answer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/answer_bg"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="italic"
-        android:visibility="gone"
-        tools:text="Question text text text text text"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_weight="7"

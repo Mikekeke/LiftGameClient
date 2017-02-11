@@ -34,7 +34,6 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
     private AnswerListener mListener;
     private BtnGroupUtil mBtnGroup;
-    private TextView mAnswertV;
 
     public QuestionFragment() {
         // Required empty public constructor
@@ -77,9 +76,6 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             qTextTv.setTypeface(robotoTypeface);
             qTextTv.setText(mQuestion.getQuestion());
             mCorrectVar = mQuestion.getCorrectVar();
-            mAnswertV = (TextView) v.findViewById(R.id.q_answer);
-            mAnswertV.setTypeface(robotoTypeface);
-            mAnswertV.setText("ОТВЕТ:\n" + mQuestion.getAnswer());
 
             // Setting up buttons
             @SuppressLint("UseSparseArrays")

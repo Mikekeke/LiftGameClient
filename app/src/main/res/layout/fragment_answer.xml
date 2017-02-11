@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/hello_blank_fragment"
-            android:textSize="50sp"
+            android:textSize="45sp"
             android:paddingTop="40dp"
             android:paddingBottom="40dp"
             android:paddingLeft="70dp"
