@@ -5,39 +5,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     android:orientation="vertical"
-    tools:context="smartlift.ibesk.ru.smartliftclient.MainActivity"
-    android:background="@color/colorPrimaryLight">
+    tools:context="smartlift.ibesk.ru.smartliftclient.MainActivity">
 
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="@dimen/header_height"
         android:layout_alignParentTop="true">
+
         <ImageView
             android:id="@+id/header_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/question_header"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/question_header" />
 
         <TextView
             android:id="@+id/onlineTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:text="OFFLINE"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="20dp"
+            android:layout_alignBottom="@id/header_img"
+            android:layout_alignLeft="@id/header_img"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:textSize="20sp"
-            android:textStyle="bold"
-
-            android:layout_alignLeft="@id/header_img"
-            android:layout_alignTop="@id/header_img"
             android:layout_alignRight="@id/header_img"
-            android:layout_alignBottom="@id/header_img"/>
+            android:layout_alignTop="@id/header_img"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+
+            android:gravity="end"
+            android:text="OFFLINE"
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <!--Fragment container-->
@@ -45,35 +46,47 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/header">
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/overlay_image"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/header"
+        android:layout_alignTop="@id/header"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="@dimen/header_height"
+        android:adjustViewBounds="true"
+        android:src="@drawable/test1"
+        android:visibility="gone"
+        />
 
     <!--Timer panel-->
     <LinearLayout
         android:id="@+id/timer_panel"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:background="@android:color/transparent"
-        android:layout_alignParentBottom="true">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/progress"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
             android:layout_gravity="center"
-            android:layout_weight="1"
-            android:minHeight="30dip"
-            android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:indeterminate="false"/>
+            android:layout_marginRight="20dp"
+            android:indeterminate="false"
+            android:minHeight="30dip"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:progressDrawable="@drawable/progress" />
     </LinearLayout>
 </RelativeLayout>

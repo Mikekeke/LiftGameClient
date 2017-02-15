@@ -5,12 +5,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -34,6 +38,9 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
     private AnswerListener mListener;
     private BtnGroupUtil mBtnGroup;
+    private ImageView mImageOverlay;
+    private View mQuestionBody;
+    private TextView qTextTv;
 
     public QuestionFragment() {
         // Required empty public constructor
@@ -68,9 +75,9 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_question, container, false);
+        final View v = inflater.inflate(R.layout.fragment_question, container, false);
         if (mQuestion != null) {
-            TextView qTextTv = (TextView) v.findViewById(R.id.question_text);
+            qTextTv = (TextView) v.findViewById(R.id.question_text);
             Typeface robotoTypeface =
                     Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Condensed.ttf");
             qTextTv.setTypeface(robotoTypeface);
@@ -97,8 +104,39 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             v4btn.setTypeface(robotoTypeface);
             buttonsMap.put(4, v4btn);
             mBtnGroup = new BtnGroupUtil(getContext(), this, buttonsMap);
+
+            mQuestionBody = v.findViewById(R.id.question_body);
         }
         return v;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("qq", "onViewCreated: ");
+        View parent = (View) view.getParent();
+        DisplayMetrics dm = getActivity().getResources().getDisplayMetrics();
+        final int dpi = (int) dm.density;
+        mImageOverlay = (ImageView) getActivity().findViewById(R.id.overlay_image);
+        ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    Log.d("qq", "onGlobalLayout: ");
+                    if (mImageOverlay != null && mQuestionBody != null) {
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        mImageOverlay.setMaxHeight((mQuestionBody.getHeight() + 50) * dpi);
+                        mImageOverlay.setTranslationY(-20f * dpi);
+                        mImageOverlay.setVisibility(View.VISIBLE);
+                        mImageOverlay.invalidate();
+                        int paddingLeft = (mImageOverlay.getMeasuredWidth() + 20 + 50) * dpi;
+                        qTextTv.setPadding(paddingLeft, 0, 15 * dpi, 0);
+                        
+                    }
+                }
+            });
+        }
     }
 
     @Override

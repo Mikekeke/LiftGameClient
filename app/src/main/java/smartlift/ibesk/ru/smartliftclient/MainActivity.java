@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
+        if (hasFocus) {
             mTimerPanel.animate()
                     .translationY(mTimerPanel.getHeight());
         }
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTimerPanel.setAlpha(1.0f);
         mTimerPanel.animate()
                 .translationY(0);
-                insertQuestionFragment(question);
+        insertQuestionFragment(question);
 
         // TODO: 10-Feb-17 PUT BACK!
         if (mLiftTimer != null) {
@@ -160,7 +160,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void insertQuestionFragment(String question) {
         Fragment fragment = QuestionFragment.newInstance(question);
-        getSupportFragmentManager().beginTransaction().disallowAddToBackStack()
+        getSupportFragmentManager().beginTransaction()
+                .disallowAddToBackStack()
                 .replace(container.getId(), fragment).commit();
         mQFragment = (QuestionFragment) fragment;
     }
