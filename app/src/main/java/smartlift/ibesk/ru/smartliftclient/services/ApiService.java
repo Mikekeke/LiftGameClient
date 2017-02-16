@@ -14,6 +14,7 @@ import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
 import de.tavendo.autobahn.WebSocketHandler;
 import de.tavendo.autobahn.WebSocketOptions;
+import smartlift.ibesk.ru.smartliftclient.Settings;
 import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.model.api.ApiRequest;
 import smartlift.ibesk.ru.smartliftclient.sockets.ImageSocket;
@@ -24,7 +25,7 @@ import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.STATUS;
 public class ApiService extends IntentService {
     public static final String EXTRA_METHOD = "ApiService.EXTRA_METHOD";
     public static final String EXTRA_CONTENT = "ApiService.EXTRA_CONTENT";
-    public static final String WS_URL = "ApiService.WS_URL";
+    
 
     public ApiService() {
         super("ApiService");
@@ -36,7 +37,7 @@ public class ApiService extends IntentService {
 
     private ImageSocket mImgSocket;
     private static SharedPreferences mPrefs;
-    private final String WSURL = mPrefs.getString(WS_URL, "");
+    private final String WSURL = mPrefs.getString(Settings.WS_URL, "");
 
 
     public static void start(Activity context) {

@@ -3,10 +3,14 @@ package smartlift.ibesk.ru.smartliftclient.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +21,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
@@ -25,22 +33,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import smartlift.ibesk.ru.smartliftclient.R;
+import smartlift.ibesk.ru.smartliftclient.Settings;
 import smartlift.ibesk.ru.smartliftclient.model.Question;
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
 import smartlift.ibesk.ru.smartliftclient.views.BtnGroupUtil;
+import smartlift.ibesk.ru.smartliftclient.views.ListenableImage;
 
 public class QuestionFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = "qq";
     private static final String ARG_QUESTION = "param1";
     private static Gson gson = new Gson();
 
     private Question mQuestion;
     private int mCorrectVar;
 
+    @Nullable
     private AnswerListener mListener;
     private BtnGroupUtil mBtnGroup;
-    private ImageView mImageOverlay;
+    private ListenableImage mImageOverlay;
     private View mQuestionBody;
     private TextView qTextTv;
+    private SharedPreferences mPrefs;
+    private RequestQueue mQueue;
 
     public QuestionFragment() {
         // Required empty public constructor
@@ -57,6 +71,8 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        mQueue = Volley.newRequestQueue(getActivity());
         if (getArguments() != null) {
             String qString = getArguments().getString(ARG_QUESTION).trim();
             try {
@@ -73,7 +89,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_question, container, false);
         if (mQuestion != null) {
@@ -82,6 +98,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                     Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Condensed.ttf");
             qTextTv.setTypeface(robotoTypeface);
             qTextTv.setText(mQuestion.getQuestion());
+            qTextTv.setAlpha(0.0f);
             mCorrectVar = mQuestion.getCorrectVar();
 
             // Setting up buttons
@@ -113,26 +130,37 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("qq", "onViewCreated: ");
-        View parent = (View) view.getParent();
+        if (TextUtils.isEmpty(mQuestion.getImg1())) {
+            return;
+        }
+
+        // Loading image and adjusting padding of TextView with question text
         DisplayMetrics dm = getActivity().getResources().getDisplayMetrics();
         final int dpi = (int) dm.density;
-        mImageOverlay = (ImageView) getActivity().findViewById(R.id.overlay_image);
+        mImageOverlay = (ListenableImage) getActivity().findViewById(R.id.overlay_image);
+        mImageOverlay.setVisibility(View.VISIBLE);
+        mImageOverlay.setAlpha(0.0f);
+        mImageOverlay.setTextViewToAdjust(qTextTv, dm);
         ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    Log.d("qq", "onGlobalLayout: ");
                     if (mImageOverlay != null && mQuestionBody != null) {
                         view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        mImageOverlay.setMaxHeight((mQuestionBody.getHeight() + 50) * dpi);
-                        mImageOverlay.setTranslationY(-20f * dpi);
-                        mImageOverlay.setVisibility(View.VISIBLE);
-                        mImageOverlay.invalidate();
-                        int paddingLeft = (mImageOverlay.getMeasuredWidth() + 20 + 50) * dpi;
-                        qTextTv.setPadding(paddingLeft, 0, 15 * dpi, 0);
-                        
+                        int side = (mQuestionBody.getHeight() + Settings.App.IMG_PLUS_HEIGHT) * dpi;
+                        mImageOverlay.setMaxHeight(side);
+                        mImageOverlay.setTranslationY(-Settings.App.IMG_Y_SHIFT * dpi);
+                        String imgUrl = mPrefs.getString(Settings.IMG_URL, "") + "?name=" + mQuestion.getImg1();
+                        ImageRequest ir = new ImageRequest(imgUrl, new Response.Listener<Bitmap>() {
+                            @Override
+                            public void onResponse(Bitmap response) {
+                                mImageOverlay.setImageBitmap(response);
+                                mImageOverlay.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
+                                qTextTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
+                            }
+                        }, 0, 0, ImageView.ScaleType.CENTER_CROP, Bitmap.Config.ARGB_8888, null);
+                        mQueue.add(ir);
                     }
                 }
             });
@@ -154,6 +182,12 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (mImageOverlay != null) {
+            mImageOverlay.setVisibility(View.INVISIBLE);
+        }
+        if (mImageOverlay != null) {
+            mImageOverlay.removeAdjustableTextView();
+        }
     }
 
     @Override
@@ -175,7 +209,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         Activity activity = getActivity();
         if (activity != null) {
             Fragment answerFragment = AnswerFragment
-                    .newInstance(mQuestion != null ? mQuestion.getAnswer() : "");
+                    .newInstance(mQuestion != null ? mQuestion.getAnswer() : "", mQuestion.getImg2());
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, answerFragment, "answer").commit();
             ApiService.sendTelemetry(

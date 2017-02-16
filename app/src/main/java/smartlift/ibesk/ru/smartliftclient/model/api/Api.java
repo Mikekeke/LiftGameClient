@@ -23,6 +23,7 @@ public final class Api {
         public static final String TIMER_RESET = "TIMER_RESET";
 
     }
+    public static final String IMAGES = "/images";
 
     public static final class ACTION {
         public static final String API_ACTION = "api_action";

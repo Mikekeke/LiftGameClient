@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,13 +54,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mOnlineTv;
     private SharedPreferences mPrefs;
     private ProgressBar mBar;
+    private ImageView mOverlayImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String url = mPrefs.getString(ApiService.WS_URL, "");
+        String url = mPrefs.getString(Settings.WS_URL, "");
         if (url.isEmpty()) {
             startActivity(new Intent(this, StartActivity.class));
             return;
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBar.setMax(QUESTION_TIME);
         mBar.setProgress(QUESTION_TIME);
         mLiftTimer = new LiftTimer(QUESTION_TIME, this, mBar);
+        
+        mOverlayImage = (ImageView) findViewById(R.id.overlay_image);
 
         showLogo();
         // TODO: 10-Feb-17 testing!
@@ -123,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showLogo() {
+        mOverlayImage.setVisibility(View.INVISIBLE);
         mTimerPanel.animate()
                 .translationY(mTimerPanel.getHeight());
         if (mLiftTimer != null) {

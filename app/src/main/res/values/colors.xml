@@ -10,5 +10,7 @@
     <color name="progress_start">#31ff49</color>
     <color name="progress_end">#ff0d00</color>
     <color name="online">#54ccf4</color>
+    <color name="image_bg">#B2F7FE</color>
+    <color name="ona_air_shadow">#6fe9f4</color>
 
 </resources>
