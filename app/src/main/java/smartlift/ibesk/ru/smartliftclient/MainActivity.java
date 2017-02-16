@@ -43,7 +43,6 @@ import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.TIMER_STOP
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         QuestionFragment.AnswerListener, LiftTimer.TimeFinishListener {
 
-
     private LinearLayout mTimerPanel;
     private int QUESTION_TIME = 10 * 1000;
     private int DEADLINE = 6 * 1000;
@@ -81,15 +80,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBar.setMax(QUESTION_TIME);
         mBar.setProgress(QUESTION_TIME);
         mLiftTimer = new LiftTimer(QUESTION_TIME, this, mBar);
-        
+
         mOverlayImage = (ImageView) findViewById(R.id.overlay_image);
 
         showLogo();
         // TODO: 10-Feb-17 testing!
-//        String q = "{\"number\":1,\"name\":\"Вопрос 12\",\"question\":\"Как вы думаете, что нужно сделать космонавту, перед тем как лечь спать в космосе?\",\"correctVar\":2,\"answer\":\"Ответ на впорос 2\",\"status\":\"не задан\",\"img1\":\"\",\"img2\":\"\",\"variants\":{\"1\":\"22\",\"2\":\"вариант 2\",\"3\":\"вариант3\",\"4\":\"вариант 4\"}}";
-//        startQuestion(q);
+        //        String q = "{\"number\":1,\"name\":\"Вопрос 12\",\"question\":\"Как вы думаете, что нужно сделать космонавту, перед тем как лечь спать в космосе?\",\"correctVar\":2,\"answer\":\"Ответ на впорос 2\",\"status\":\"не задан\",\"img1\":\"\",\"img2\":\"\",\"variants\":{\"1\":\"22\",\"2\":\"вариант 2\",\"3\":\"вариант3\",\"4\":\"вариант 4\"}}";
+        //        startQuestion(q);
     }
-
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -103,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     @Override
@@ -127,7 +124,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showLogo() {
-        mOverlayImage.setVisibility(View.INVISIBLE);
+        if (mOverlayImage != null) {
+            if (mOverlayImage.getVisibility() == View.VISIBLE) {
+                mOverlayImage.setVisibility(View.INVISIBLE);
+                mOverlayImage.setImageBitmap(null);
+            }
+        }
         mTimerPanel.animate()
                 .translationY(mTimerPanel.getHeight());
         if (mLiftTimer != null) {
@@ -183,13 +185,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onTimeFinish() {
         Log.d("qq", "onTimeFinish: ");
-//        endGame();
+        //        endGame();
     }
 
     private class ApiReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent == null) return;
+            if (intent == null) {
+                return;
+            }
             String method = intent.getStringExtra(ApiService.EXTRA_METHOD);
             switch (method) {
                 case QUESTION:
@@ -270,9 +274,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alarm.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pint);
     }
 
-
     private void forcePickVariant(String variantNum) {
-        if (mQFragment == null) return;
+        if (mQFragment == null) {
+            return;
+        }
         try {
             int num = Integer.parseInt(variantNum);
             mQFragment.forcePickVariant(num);
