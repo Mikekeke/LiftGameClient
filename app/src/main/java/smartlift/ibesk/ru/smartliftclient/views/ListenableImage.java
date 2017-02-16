@@ -36,7 +36,9 @@ public class ListenableImage extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        Log.d("@qq", "onLayout this = " + this);
         if (mTextToAdjust != null) {
+            Log.d("@qq", "Adjusting tv");
             mTextToAdjust.setPadding((int) (right + getResources().getDimension(R.dimen.question_text_hor_padding)),
                     0, 
                     mTextToAdjust.getPaddingRight(),
@@ -44,12 +46,13 @@ public class ListenableImage extends ImageView {
         }
     }
     
-    public  void setTextViewToAdjust(TextView textView, DisplayMetrics dm) {
+    public  void setTextViewToAdjust(TextView textView) {
+        Log.d("@qq", "Setting tv");
+        Log.d("@qq", "Setting tv this = " + this);
         mTextToAdjust = textView;
     }
     
     public void removeAdjustableTextView() {
         mTextToAdjust = null;
-        mDm = null;
     }
 }

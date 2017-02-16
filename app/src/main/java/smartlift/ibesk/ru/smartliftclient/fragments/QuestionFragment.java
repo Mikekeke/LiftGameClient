@@ -131,6 +131,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (TextUtils.isEmpty(mQuestion.getImg1())) {
+            qTextTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
             return;
         }
 
@@ -140,7 +141,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         mImageOverlay = (ListenableImage) getActivity().findViewById(R.id.overlay_image);
         mImageOverlay.setVisibility(View.VISIBLE);
         mImageOverlay.setAlpha(0.0f);
-        mImageOverlay.setTextViewToAdjust(qTextTv, dm);
+        mImageOverlay.setTextViewToAdjust(qTextTv);
         ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -182,12 +183,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        if (mImageOverlay != null) {
-            mImageOverlay.setVisibility(View.INVISIBLE);
-        }
-        if (mImageOverlay != null) {
-            mImageOverlay.removeAdjustableTextView();
-        }
+        
     }
 
     @Override
@@ -208,6 +204,11 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public void showAnswer() {
         Activity activity = getActivity();
         if (activity != null) {
+            if (TextUtils.isEmpty(mQuestion.getImg2()) && mImageOverlay != null) {
+                mImageOverlay.setVisibility(View.INVISIBLE);
+                mImageOverlay.removeAdjustableTextView();
+                mImageOverlay.setImageBitmap(null);
+            }
             Fragment answerFragment = AnswerFragment
                     .newInstance(mQuestion != null ? mQuestion.getAnswer() : "", mQuestion.getImg2());
             getActivity().getSupportFragmentManager().beginTransaction()
