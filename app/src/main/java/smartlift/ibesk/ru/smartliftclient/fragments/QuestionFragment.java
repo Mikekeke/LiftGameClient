@@ -128,6 +128,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
+    // Setting image height and position at first run
     private void initImageParams(final View view) {
         DisplayMetrics dm = getActivity().getResources().getDisplayMetrics();
         final int dpi = (int) dm.density;
@@ -140,7 +141,6 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                     if (mImageOverlay != null && mQuestionBody != null) {
                         view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         int side = (mQuestionBody.getHeight() + Settings.App.IMG_PLUS_HEIGHT) * dpi;
-                        mImageOverlay.setMaxHeight(side);
                         mImageOverlay.setMaxHeight(side);
                         Settings.ImageState.initialize();
                     }
