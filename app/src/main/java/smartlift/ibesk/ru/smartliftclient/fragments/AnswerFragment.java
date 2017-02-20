@@ -90,15 +90,14 @@ public class AnswerFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(TextUtils.isEmpty(mImage2)) {
+        if (TextUtils.isEmpty(mImage2)) {
             mAnswerTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
             return;
         }
-        
+
         mImageOverlay = (ListenableImage) getActivity().findViewById(R.id.overlay_image);
         mImageOverlay.setAlpha(0.0f);
         mImageOverlay.setVisibility(View.VISIBLE);
-        mImageOverlay.setTextViewToAdjust(mAnswerTv);
         ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -110,6 +109,7 @@ public class AnswerFragment extends Fragment {
                         ImageRequest ir = new ImageRequest(imgUrl, new Response.Listener<Bitmap>() {
                             @Override
                             public void onResponse(Bitmap response) {
+                                mImageOverlay.setTextViewToAdjust(mAnswerTv);
                                 mImageOverlay.setImageBitmap(response);
                                 mImageOverlay.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
                                 mAnswerTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);

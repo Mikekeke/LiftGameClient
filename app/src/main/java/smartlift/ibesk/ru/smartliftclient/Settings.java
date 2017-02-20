@@ -14,4 +14,15 @@ public final class Settings {
         public static final int IMG_Y_SHIFT = IMG_PLUS_HEIGHT / 2;
     }
     
+    public static final class ImageState{
+        private static boolean initialized = false;
+        public static void initialize() {
+            initialized = true;
+        }
+        
+        public static boolean isInitialized() {
+            return initialized;
+        }
+    }
+    
 }

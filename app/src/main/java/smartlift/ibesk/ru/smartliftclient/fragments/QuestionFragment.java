@@ -128,22 +128,11 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    @Override
-    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (TextUtils.isEmpty(mQuestion.getImg1())) {
-            qTextTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
-            return;
-        }
-
-        // Loading image and adjusting padding of TextView with question text
+    private void initImageParams(final View view) {
         DisplayMetrics dm = getActivity().getResources().getDisplayMetrics();
         final int dpi = (int) dm.density;
-        mImageOverlay = (ListenableImage) getActivity().findViewById(R.id.overlay_image);
-        mImageOverlay.setAlpha(0.0f);
-        mImageOverlay.setVisibility(View.VISIBLE);
-        mImageOverlay.setTextViewToAdjust(qTextTv);
         ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+        mImageOverlay.setTranslationY(-Settings.App.IMG_Y_SHIFT * dpi);
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
@@ -152,11 +141,43 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                         view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         int side = (mQuestionBody.getHeight() + Settings.App.IMG_PLUS_HEIGHT) * dpi;
                         mImageOverlay.setMaxHeight(side);
-                        mImageOverlay.setTranslationY(-Settings.App.IMG_Y_SHIFT * dpi);
+                        mImageOverlay.setMaxHeight(side);
+                        Settings.ImageState.initialize();
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mImageOverlay = (ListenableImage) getActivity().findViewById(R.id.overlay_image);
+
+        if (!Settings.ImageState.isInitialized()) {
+            initImageParams(view);
+        }
+
+        if (TextUtils.isEmpty(mQuestion.getImg1())) {
+            qTextTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
+            return;
+        }
+
+        // Loading image and adjusting padding of TextView with question text
+        mImageOverlay.setAlpha(0.0f);
+        mImageOverlay.setVisibility(View.VISIBLE);
+        ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (mImageOverlay != null && mQuestionBody != null) {
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         String imgUrl = mPrefs.getString(Settings.IMG_URL, "") + "?name=" + mQuestion.getImg1();
                         ImageRequest ir = new ImageRequest(imgUrl, new Response.Listener<Bitmap>() {
                             @Override
                             public void onResponse(Bitmap response) {
+                                mImageOverlay.setTextViewToAdjust(qTextTv);
                                 mImageOverlay.setImageBitmap(response);
                                 mImageOverlay.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
                                 qTextTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
@@ -191,7 +212,6 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        
     }
 
     @Override
