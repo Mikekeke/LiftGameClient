@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
@@ -139,8 +140,8 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         DisplayMetrics dm = getActivity().getResources().getDisplayMetrics();
         final int dpi = (int) dm.density;
         mImageOverlay = (ListenableImage) getActivity().findViewById(R.id.overlay_image);
-        mImageOverlay.setVisibility(View.VISIBLE);
         mImageOverlay.setAlpha(0.0f);
+        mImageOverlay.setVisibility(View.VISIBLE);
         mImageOverlay.setTextViewToAdjust(qTextTv);
         ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
@@ -160,7 +161,14 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
                                 mImageOverlay.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
                                 qTextTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
                             }
-                        }, 0, 0, ImageView.ScaleType.CENTER_CROP, Bitmap.Config.ARGB_8888, null);
+                        }, 0, 0, ImageView.ScaleType.CENTER_CROP, Bitmap.Config.ARGB_8888,
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        qTextTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
+                                        Log.e(TAG, "onErrorResponse: ", error);
+                                    }
+                                });
                         mQueue.add(ir);
                     }
                 }
@@ -204,7 +212,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public void showAnswer() {
         Activity activity = getActivity();
         if (activity != null) {
-            if (TextUtils.isEmpty(mQuestion.getImg2()) && mImageOverlay != null) {
+            if (!TextUtils.isEmpty(mQuestion.getImg1()) && mImageOverlay != null) {
                 mImageOverlay.setVisibility(View.INVISIBLE);
                 mImageOverlay.removeAdjustableTextView();
                 mImageOverlay.setImageBitmap(null);

@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -29,6 +31,7 @@ import smartlift.ibesk.ru.smartliftclient.views.ListenableImage;
  * create an instance of this fragment.
  */
 public class AnswerFragment extends Fragment {
+    private static final String TAG = "qq";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ANSWER = "AnswerFragment.ARG_ANSWER";
@@ -94,6 +97,7 @@ public class AnswerFragment extends Fragment {
         
         mImageOverlay = (ListenableImage) getActivity().findViewById(R.id.overlay_image);
         mImageOverlay.setAlpha(0.0f);
+        mImageOverlay.setVisibility(View.VISIBLE);
         mImageOverlay.setTextViewToAdjust(mAnswerTv);
         ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
@@ -110,7 +114,14 @@ public class AnswerFragment extends Fragment {
                                 mImageOverlay.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
                                 mAnswerTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
                             }
-                        }, 0, 0, ImageView.ScaleType.CENTER_CROP, Bitmap.Config.ARGB_8888, null);
+                        }, 0, 0, ImageView.ScaleType.CENTER_CROP, Bitmap.Config.ARGB_8888,
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        mAnswerTv.animate().alpha(1.0f).setDuration(Settings.App.FADE_INT_TIME);
+                                        Log.e(TAG, "onErrorResponse: ", error);
+                                    }
+                                });
                         mQueue.add(ir);
                     }
                 }

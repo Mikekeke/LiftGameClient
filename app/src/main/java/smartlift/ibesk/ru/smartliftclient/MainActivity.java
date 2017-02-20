@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,6 +26,7 @@ import smartlift.ibesk.ru.smartliftclient.fragments.QuestionFragment;
 import smartlift.ibesk.ru.smartliftclient.model.api.Api;
 import smartlift.ibesk.ru.smartliftclient.services.ApiService;
 import smartlift.ibesk.ru.smartliftclient.utils.LiftTimer;
+import smartlift.ibesk.ru.smartliftclient.views.ListenableImage;
 
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.ACTION.API_ACTION;
 import static smartlift.ibesk.ru.smartliftclient.model.api.Api.METHOD.CHECK;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mOnlineTv;
     private SharedPreferences mPrefs;
     private ProgressBar mBar;
-    private ImageView mOverlayImage;
+    private ListenableImage mOverlayImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBar.setProgress(QUESTION_TIME);
         mLiftTimer = new LiftTimer(QUESTION_TIME, this, mBar);
 
-        mOverlayImage = (ImageView) findViewById(R.id.overlay_image);
+        mOverlayImage = (ListenableImage) findViewById(R.id.overlay_image);
 
         showLogo();
         // TODO: 10-Feb-17 testing!
@@ -125,10 +125,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showLogo() {
         if (mOverlayImage != null) {
-            if (mOverlayImage.getVisibility() == View.VISIBLE) {
-                mOverlayImage.setVisibility(View.INVISIBLE);
-                mOverlayImage.setImageBitmap(null);
-            }
+            mOverlayImage.setVisibility(View.INVISIBLE);
+            mOverlayImage.setImageBitmap(null);
+            mOverlayImage.removeAdjustableTextView();
         }
         mTimerPanel.animate()
                 .translationY(mTimerPanel.getHeight());
@@ -145,6 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startQuestion(String question) {
+        if (mOverlayImage != null) {
+            mOverlayImage.setImageBitmap(null);
+            mOverlayImage.removeAdjustableTextView();
+        }
+
         mTimerPanel.setAlpha(1.0f);
         mTimerPanel.animate()
                 .translationY(0);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,8 +17,6 @@ public class ListenableImage extends ImageView {
     
     @Nullable
     private TextView mTextToAdjust = null;
-    @Nullable
-    private DisplayMetrics mDm = null;
     
     public ListenableImage(Context context) {
         super(context);
@@ -36,19 +33,15 @@ public class ListenableImage extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        Log.d("@qq", "onLayout this = " + this);
         if (mTextToAdjust != null) {
-            Log.d("@qq", "Adjusting tv");
             mTextToAdjust.setPadding((int) (right + getResources().getDimension(R.dimen.question_text_hor_padding)),
-                    0, 
+                    mTextToAdjust.getPaddingTop(), 
                     mTextToAdjust.getPaddingRight(),
                     0);
         }
     }
     
     public  void setTextViewToAdjust(TextView textView) {
-        Log.d("@qq", "Setting tv");
-        Log.d("@qq", "Setting tv this = " + this);
         mTextToAdjust = textView;
     }
     
